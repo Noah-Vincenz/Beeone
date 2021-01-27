@@ -2,6 +2,9 @@
 #
 .DS_Store
 
+# copyright img files
+img
+
 # Xcode
 #
 build/

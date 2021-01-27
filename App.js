@@ -1,16 +1,26 @@
-import * as React from "react";
-import { View, Text } from "react-native";
+import React from 'react';
+import { HomeScreen } from 'src/scenes/HomeScreen.js';
+import { MyNewsFeedScreen } from 'src/scenes/MyNewsFeedScreen.js';
+import { MyBankingScreen } from 'src/scenes/MyBankingScreen.js';
+import { MyDocumentsScreen } from 'src/scenes/MyDocumentsScreen.js';
+import { MyMarketplaceScreen } from 'src/scenes/MyMarketplaceScreen.js';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 
-export default function App() {
+const Stack = createStackNavigator();
+
+function App() {
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Text>Universal React with Expo</Text>
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="HomeScreen">
+        <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ title: 'Home' }}/>
+        <Stack.Screen name="MyNewsFeedScreen" component={MyNewsFeedScreen} options={{ title: 'News Feed' }}/>
+        <Stack.Screen name="MyBankingScreen" component={MyBankingScreen} options={{ title: 'Banking' }}/>
+        <Stack.Screen name="MyDocumentsScreen" component={MyDocumentsScreen} options={{ title: 'Documents' }} />
+        <Stack.Screen name="MyMarketplaceScreen" component={MyMarketplaceScreen} options={{ title: 'Marketplace' }} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
+
+export default App;
