@@ -31,7 +31,7 @@ async function remove(key) {
 };
   
 export function setAsyncStorage(key, value) {
-    return set(key, value);
+  return set(key, value);
 }
 
 export function getAsyncStorage(key) {

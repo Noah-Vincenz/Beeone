@@ -8,7 +8,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { SignInScreen } from 'src/scenes/SignInScreen.js';
 import { SplashScreen } from 'src/scenes/SplashScreen.js';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Alert } from 'react-native';
 import { State } from 'react-native-gesture-handler';
 import { MyContext } from './src/main/scenes/util/Context';
 import { ObpApiUtils } from 'src/util/ObpApiUtils.js';
@@ -60,9 +60,21 @@ export default App = () => {
           },
         })
         .then((response) => response.json())
-        .then((json) => { setToken(json.token); setAsyncStorage('obpToken', json.token) })
+        .then((json) => { 
+          if (json.token == null || json.token == undefined || json.token == '') {
+            Alert.alert(
+              "Authentication Error",
+              "User could not be logged in.\nPlease ensure username and password are correct.",
+              [{ text: "OK" }],
+              { cancelable: false }
+            );
+          } else {
+            setToken(json.token); 
+            setAsyncStorage('obpToken', json.token)
+            dispatch({ type: 'SIGN_IN', obpToken: json.token }); 
+          }
+        })
         .catch((error) => console.error(error))
-        .finally(() => { dispatch({ type: 'SIGN_IN', obpToken: obpToken }) });
       },
       signOut: () => {
         removeAsyncStorage('obpToken')
