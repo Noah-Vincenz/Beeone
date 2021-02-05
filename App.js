@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState, useMemo, useReducer } from 'react';
 import { HomeScreen } from 'src/scenes/HomeScreen.js';
 import { MyNewsFeedScreen } from 'src/scenes/MyNewsFeedScreen.js';
 import { MyBankingScreen } from 'src/scenes/MyBankingScreen.js';
@@ -6,25 +6,104 @@ import { MyDocumentsScreen } from 'src/scenes/MyDocumentsScreen.js';
 import { MyMarketplaceScreen } from 'src/scenes/MyMarketplaceScreen.js';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { SignInScreen } from 'src/scenes/SignInScreen.js';
+import { SplashScreen } from 'src/scenes/SplashScreen.js';
+import { StyleSheet, View } from 'react-native';
+import { State } from 'react-native-gesture-handler';
+import { MyContext } from './src/main/scenes/util/Context';
+import { ObpApiUtils } from 'src/util/ObpApiUtils.js';
+import { joinPath, base_url } from './src/main/util/ObpApiUtils';
+import {reducer, initialState} from './src/main/reducer';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getAsyncStorage, setAsyncStorage } from 'src/util/StorageHelper.js'
+import { removeAsyncStorage } from './src/main/util/StorageHelper';
 
 const Stack = createStackNavigator();
 
-const NavStack = () => { // declare NavStack as fat arrow functions
+const HomeNavStack = () => {
   return (
-    <Stack.Navigator initialRouteName="HomeScreen">
-      <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ title: 'Home' }}/>
-      <Stack.Screen name="MyNewsFeedScreen" component={MyNewsFeedScreen} options={{ title: 'News Feed' }}/>
-      <Stack.Screen name="MyBankingScreen" component={MyBankingScreen} options={{ title: 'Banking' }}/>
-      <Stack.Screen name="MyDocumentsScreen" component={MyDocumentsScreen} options={{ title: 'Documents' }} />
-      <Stack.Screen name="MyMarketplaceScreen" component={MyMarketplaceScreen} options={{ title: 'Marketplace' }} />
+    <Stack.Navigator initialRouteName="Home">
+      <Stack.Screen name="Home" component={HomeScreen}/>
+      <Stack.Screen name="News Feed" component={MyNewsFeedScreen}/>
+      <Stack.Screen name="Banking" component={MyBankingScreen} options={{ headerShown: false }}/>
+      <Stack.Screen name="Documents" component={MyDocumentsScreen}/>
+      <Stack.Screen name="Marketplace" component={MyMarketplaceScreen}/>
     </Stack.Navigator>
   );
 }
 
 export default App = () => {
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const [obpToken, setToken] = useState('');
+  const consumerKey = process.env['CONSUMER_KEY'];
+
+  useEffect(() => {
+    // Fetch the token from storage then navigate to our appropriate place
+    // the loading screen will be unmounted and thrown away
+    const bootstrapAsync = async () => {
+      getAsyncStorage('obpToken')
+      .then((token) => { console.log(`token to restore: ${token}`); dispatch({ type: 'RESTORE_TOKEN', obpToken: token }); })
+    };
+    bootstrapAsync();
+  }, []);
+
+  const authContext = useMemo(() => ({
+      signIn: async data => {        
+        console.log(`Login credentials submitted: ${data.username}, ${data.password}`)
+        // send username and password to server and get token
+        // persist token using `AsyncStorage`
+        fetch(joinPath(base_url, '/my/logins/direct'), {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `DirectLogin username="${data.username}",password="${data.password}",consumer_key="${consumerKey}"`
+          },
+        })
+        .then((response) => response.json())
+        .then((json) => { setToken(json.token); setAsyncStorage('obpToken', json.token) })
+        .catch((error) => console.error(error))
+        .finally(() => { dispatch({ type: 'SIGN_IN', obpToken: obpToken }) });
+      },
+      signOut: () => {
+        removeAsyncStorage('obpToken')
+        .then((bool) => { console.log(`signed out: ${bool}`); dispatch({ type: 'SIGN_OUT' }) })
+      }, 
+      signUp: async data => {
+        dispatch({ type: 'SIGN_IN', obpToken: 'dummy-auth-token' });
+      },
+    }),
+    []
+  );
+
   return (
-    <NavigationContainer>
-      <NavStack />
-    </NavigationContainer>
-  )
+    <MyContext.Provider value={authContext}>
+      <NavigationContainer>
+        <Stack.Navigator headerMode="none">
+          {state.isLoading ? (
+            <Stack.Screen name="Splash Screen" component={SplashScreen} />
+          ) : state.obpToken == null ? ( // No token found, user is not signed in
+            <Stack.Screen
+              name="Sign In"
+              component={SignInScreen}
+              options={{
+                title: '',
+                headerBackTitle: 'null',
+                headerBackTitleVisible: false,
+                animationTypeForReplace: state.isSignout ? 'pop' : 'push' // pop animation when logging out -- shows glimpse of back button
+              }}
+            />
+          ) : (
+            <Stack.Screen name="Home" component={HomeNavStack}/> // User is signed in
+          )}
+        </Stack.Navigator>
+      </NavigationContainer>
+    </MyContext.Provider>
+  );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
+

@@ -1,17 +1,18 @@
 {
-    "plugins": [
-      ["@babel/plugin-transform-flow-strip-types"],
-      [
-        "module-resolver",
-        {
-          "root": [
-            "./src/main"
-          ],
-        "alias": {
-           "src": "./src/main",
-           "resources": "./src/main/resources"
-         }
-        } 
-      ],
-    ]
-  }
+  "plugins": [
+    ["@babel/plugin-transform-flow-strip-types"],
+    [
+      "module-resolver",
+      {
+        "root": [
+          "./src/main"
+        ],
+      "alias": {
+          "src": "./src/main",
+          "resources": "./src/main/resources"
+        }
+      } 
+    ],
+    ["transform-inline-environment-variables"]
+  ]
+}

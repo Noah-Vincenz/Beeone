@@ -1,18 +1,45 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createStackNavigator } from '@react-navigation/stack';
+import { AccountsScreen } from 'src/scenes/banking/AccountsScreen.js';
+import { AddAccountScreen } from 'src/scenes/banking/AddAccountScreen.js';
+import { AddCategoryScreen } from 'src/scenes/banking/AddCategoryScreen.js';
+import { SpendingScreen } from 'src/scenes/banking/SpendingScreen.js';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getAsyncStorage } from '../util/StorageHelper';
+
+const Stack = createStackNavigator();
+
+const AccountsNavStack = () => {
+  return (
+    <Stack.Navigator initialRouteName="Accounts">
+      <Stack.Screen name="Accounts" component={AccountsScreen}/>
+      <Stack.Screen name="Add Account" component={AddAccountScreen}/>
+    </Stack.Navigator>
+  );
+}
+
+const SpendingNavStack = () => {
+  return (
+    <Stack.Navigator initialRouteName="Spending">
+      <Stack.Screen name="Spending" component={SpendingScreen}/>
+      <Stack.Screen name="Add Category" component={AddCategoryScreen}/>
+    </Stack.Navigator>
+  );
+}
+
+const Tab = createBottomTabNavigator();
 
 export function MyBankingScreen({ navigation }) {
-    return (
-      <View style={styles.container}>
-        <Text>Banking Screen</Text>
-      </View>
-    );
+  return (
+    <Tab.Navigator>
+      <Tab.Screen name="Accounts" component={AccountsNavStack}/>
+      <Tab.Screen name="Spending" component={SpendingNavStack}/>
+    </Tab.Navigator>
+  );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center'
-    }
 });
