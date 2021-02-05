@@ -6,6 +6,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getAsyncStorage } from '../../util/StorageHelper';
 import { base_url, joinPath } from '../../util/ObpApiUtils';
 import { MyContext } from '../util/Context';
+import { GREEN_PARIS } from '../../resources/styles/colours';
+import { FONT_WEIGHT_REGULAR } from '../../resources/styles/typography';
 
 export function AccountsScreen({ navigation }) {
   const [isLoading, setLoading] = useState(true);
@@ -36,9 +38,11 @@ export function AccountsScreen({ navigation }) {
           renderItem={({item}) => <Text>{`${item.bank_id}: ${item.account_type}`}</Text>}
         />
       )}
-      <TouchableOpacity style={styles.buttonStyles} onPress={() => navigation.navigate('Add Account')}>
-        <Text style={styles.buttonText}>Add Account</Text>
-      </TouchableOpacity>
+      <View style={styles.addAccountContainer}>
+        <TouchableOpacity style={styles.addAccountButton} onPress={() => navigation.navigate('Add Account')}>
+          <Text style={styles.addAccountButtonText}>Add Account</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -49,12 +53,22 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center'
     },
-    buttonStyles: {
-      backgroundColor: SECONDARY,
+    addAccountContainer: {
+      width: '100%',
+      position:'absolute',
+      bottom:0,
+      alignItems: 'center',
+      justifyContent: 'center'
     },
-    buttonText: {
-        color: WHITE,
-        fontWeight: FONT_WEIGHT_BOLD,
-        fontSize: FONT_SIZE_HEADING
-    }
+    addAccountButton: {
+      width: '100%',
+      padding: '2%',
+      backgroundColor: GREEN_PARIS,
+    },
+    addAccountButtonText: {
+      color: WHITE,
+      textAlign: 'center',
+      fontWeight: FONT_WEIGHT_REGULAR,
+      fontSize: FONT_SIZE_HEADING
+  },
 });

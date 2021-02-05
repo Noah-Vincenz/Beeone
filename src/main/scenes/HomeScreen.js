@@ -56,7 +56,8 @@ const styles = StyleSheet.create({
   },
   signOutContainer:{
     width: '100%',
-    alignSelf: 'baseline',
+    position:'absolute',
+    bottom:0,
     alignItems: 'center',
     justifyContent: 'center'
   },
