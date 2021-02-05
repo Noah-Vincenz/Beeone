@@ -5,40 +5,39 @@ import { WHITE, SECONDARY } from 'resources/styles/colours'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getAsyncStorage } from '../../util/StorageHelper';
 import { base_url, joinPath } from '../../util/ObpApiUtils';
-import { MyContext } from '../util/Context';
 
-export function AccountsScreen({ navigation }) {
+export function AddAccountScreen({ navigation }) {
   const [isLoading, setLoading] = useState(true);
-  const [accounts, setAccounts] = useState([]);
+  const [banks, setBanks] = useState([]);
 
   useEffect(() => {
     getAsyncStorage('obpToken')
     .then((token) => {
-      fetch(joinPath(base_url, `/obp/v4.0.0/my/accounts`), {
+      fetch(joinPath(base_url, '/obp/v4.0.0/banks'), {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `DirectLogin token="${token}"`
         },
       })
       .then((response) => response.json())
-      .then((json) => setAccounts(json.accounts))
+      .then((json) => setBanks(json.banks))
       .catch((error) => console.error(error))
       .finally(() => { setLoading(false) });
     })
   }, []);
   return (
     <View style={styles.container}>
-      <Text>Your Accounts</Text>
-      {isLoading ? <ActivityIndicator/> : (
-        <FlatList 
-          data={accounts}
-          keyExtractor={(item, index) => `list-item-${index}`}
-          renderItem={({item}) => <Text>{`${item.bank_id}: ${item.account_type}`}</Text>}
-        />
-      )}
-      <TouchableOpacity style={styles.buttonStyles} onPress={() => navigation.navigate('Add Account')}>
-        <Text style={styles.buttonText}>Add Account</Text>
-      </TouchableOpacity>
+        <Text>Select Bank</Text>
+        {isLoading ? <ActivityIndicator/> : (
+            <FlatList 
+            data={banks}
+            keyExtractor={(item, index) => `list-item-${index}`}
+            renderItem={({item}) => <Text>{item.short_name}</Text>}
+            />
+        )}
+        <TouchableOpacity style={styles.buttonStyles}>
+            <Text style={styles.buttonText}>Add</Text>
+        </TouchableOpacity>
     </View>
   );
 };
