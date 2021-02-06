@@ -5,6 +5,7 @@ import { WHITE, SECONDARY } from 'resources/styles/colours'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getAsyncStorage } from '../../util/StorageHelper';
 import { base_url, joinPath } from '../../util/ObpApiUtils';
+import { GREY_LIGHT } from '../../resources/styles/colours';
 
 export function AddCategoryScreen({ navigation }) {
   const [isLoading, setLoading] = useState(true);
@@ -23,7 +24,8 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        backgroundColor: GREY_LIGHT
     },
     buttonStyles: {
       backgroundColor: SECONDARY,
