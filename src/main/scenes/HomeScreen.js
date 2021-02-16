@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   screenButton: {
-      backgroundColor: GREEN_KELLY,
+      backgroundColor: GREEN_PARIS,
       marginVertical: '2%',
       height: '15%',
       width: '100%',

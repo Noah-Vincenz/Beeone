@@ -9,7 +9,7 @@ import { AddCategoryScreen } from 'src/scenes/banking/AddCategoryScreen.js';
 import { SpendingScreen } from 'src/scenes/banking/SpendingScreen.js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getAsyncStorage } from '../util/StorageHelper';
-import { GREEN_MINT, GREY_LIGHT } from '../resources/styles/colours';
+import { GREEN_MINT, GREEN_PARIS, GREY_LIGHT } from '../resources/styles/colours';
 import { FONT_SIZE_SMALL, FONT_SIZE_STANDARD } from '../resources/styles/typography';
 
 const Stack = createStackNavigator();
@@ -37,7 +37,7 @@ const Tab = createBottomTabNavigator();
 export function MyBankingScreen({ navigation }) {
   return (
     <Tab.Navigator tabBarOptions={{
-      activeTintColor: GREEN_MINT,
+      activeTintColor: GREEN_PARIS,
       inactiveTintColor: GREY_LIGHT,
       labelStyle: {
         fontSize: FONT_SIZE_SMALL

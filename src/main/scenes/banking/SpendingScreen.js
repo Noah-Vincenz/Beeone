@@ -32,14 +32,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   addCategoryContainer: {
-    position:'absolute',
-    bottom:0,
     width: '100%',
+    position:'absolute',
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   addCategoryButton: {
-    width: '100%',
-    padding: '2%',
+    width: '85%',
+    padding: '1.5%',
     backgroundColor: GREEN_PARIS,
+    borderRadius: 20,
+    marginBottom: '1%'
   },
   addCategoryButtonText: { 
     color: WHITE,

@@ -6,8 +6,49 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getAsyncStorage } from '../../util/StorageHelper';
 import { base_url, joinPath } from '../../util/ObpApiUtils';
 import { MyContext } from '../util/Context';
-import { GREEN_FOREST, GREEN_MINT, GREEN_PARIS, GREY_DARK, GREY_LIGHT, GREY_MEDIUM } from '../../resources/styles/colours';
+import { BLACK, GREEN_FOREST, GREEN_MINT, GREEN_PARIS, GREY_DARK, GREY_LIGHT, GREY_MEDIUM } from '../../resources/styles/colours';
 import { FONT_SIZE_SMALL, FONT_SIZE_STANDARD, FONT_WEIGHT_REGULAR } from '../../resources/styles/typography';
+
+function getLogoSourcePath(bankId) {
+  switch (bankId) {
+    case 'rbs': return require('../../resources/img/rbs-logo.png');
+    case 'hsbc-test': return require('../../resources/img/hsbc-logo.png');
+    case 'testowy_bank_id': return require('../../resources/img/db-logo.png');
+    default: return require('../../resources/img/rbs-logo.png');
+  }
+}
+
+const getBankAndAccountIds = async (token) => {
+  let response = await fetch(joinPath(base_url, `/obp/v4.0.0/my/accounts`), {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `DirectLogin token="${token}"`
+    },
+  })
+  let json = await response.json();
+  const bankIds = json.accounts.map(x => x.bank_id) // return array of account ids
+  const accountIds = json.accounts.map(x => x.id) // return array of account ids
+  return {bankIds, accountIds}
+}
+
+function getAccount(bankId, accountId, listOfAccounts, token) {
+  return new Promise(resolve => {
+    fetch(joinPath(base_url, `/obp/v4.0.0/my/banks/${bankId}/accounts/${accountId}/account`), {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `DirectLogin token="${token}"`
+      },
+    })
+    .then((response) => response.json())
+    .then((json) => {
+      listOfAccounts.push(json);
+      resolve(json);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+  });
+}
 
 export function AccountsScreen({ navigation }) {
   const [isLoading, setLoading] = useState(true);
@@ -16,18 +57,21 @@ export function AccountsScreen({ navigation }) {
   useEffect(() => {
     getAsyncStorage('obpToken')
     .then((token) => {
-      fetch(joinPath(base_url, `/obp/v4.0.0/my/accounts`), {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `DirectLogin token="${token}"`
-        },
+      getBankAndAccountIds(token)
+      .then((accounts) => {
+        const promises = []; // to store all returned promises
+        const listOfAccounts = []
+        accounts.bankIds.forEach(function (item, index) {
+          promises.push(getAccount(accounts.bankIds[index], accounts.accountIds[index], listOfAccounts, token));
+        });
+        Promise.all(promises).then(() => {
+          // only when all promises have been collected this is executed
+          setAccounts(listOfAccounts);
+          setLoading(false);
+        });     
       })
-      .then((response) => response.json())
-      .then((json) => setAccounts(json.accounts))
       .catch((error) => console.error(error))
-      .finally(() => { setLoading(false) });
     })
-    // TODO: add /obp/v4.0.0/banks/BANK_ID/balances with bank id to get balances
   }, []);
   return (
     <View style={styles.container}>
@@ -41,15 +85,15 @@ export function AccountsScreen({ navigation }) {
                 <View style={styles.accountContainerTop}>
                   <Image
                   style={styles.bankLogo}
-                  source={require('../../resources/img/rbs-logo.png')}
+                  source={getLogoSourcePath(item.bank_id)}
                   />
                   <View style={styles.labelAndBankIdContainer}>
-                    <Text style={styles.accountContainerTopText}>{`${item.label} (${item.bank_id})`}</Text>
+                    <Text style={styles.accountContainerTopText}>{item.label} ({item.bank_id})</Text>
                   </View>
                 </View>
                 <View style={styles.accountContainerMiddle}>
                   <Text style={styles.accountContainerMiddleText}>{item.account_type}</Text>
-                  <Text style={styles.accountContainerMiddleText}>0 EUR</Text>
+                  <Text style={styles.accountContainerMiddleText}>{item.balance.amount} ({item.balance.currency})</Text>
                 </View>
                 <View style={styles.accountContainerBottom}>
                   <TouchableOpacity style={styles.payTransferButton}>
@@ -87,11 +131,12 @@ const styles = StyleSheet.create({
       marginVertical: '1%',
       borderColor: GREY_MEDIUM,
       borderWidth: 1,
+      borderTopWidth: 1.5,
     },
     accountContainerTop: {
       flexDirection: 'row',
       backgroundColor: WHITE,
-      padding: '1%'
+      padding: '2%',
     },
     bankLogo: {
       flex: 1,
@@ -105,7 +150,7 @@ const styles = StyleSheet.create({
     accountContainerMiddle: {
       backgroundColor: WHITE,
       alignItems: 'flex-start',
-      padding: '1%'
+      padding: '1%',
     },
     accountContainerBottom: {
       backgroundColor: WHITE,
@@ -114,14 +159,16 @@ const styles = StyleSheet.create({
     addAccountContainer: {
       width: '100%',
       position:'absolute',
-      bottom:0,
+      bottom: 0,
       alignItems: 'center',
       justifyContent: 'center'
     },
     addAccountButton: {
-      width: '100%',
-      padding: '2%',
+      width: '85%',
+      padding: '1.5%',
       backgroundColor: GREEN_PARIS,
+      borderRadius: 20,
+      marginBottom: '1%'
     },
     addAccountButtonText: {
       color: WHITE,
