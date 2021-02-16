@@ -96,10 +96,13 @@ export function AccountsScreen({ navigation }) {
                   <Text style={styles.accountContainerMiddleText}>{item.balance.amount} ({item.balance.currency})</Text>
                 </View>
                 <View style={styles.accountContainerBottom}>
-                  <TouchableOpacity style={styles.payTransferButton} onPress={() => pay(item.bank_id, item.id)}>
+                  <TouchableOpacity style={styles.payTransferButton}>
                     <Text style={styles.payTransferButtonText}>Pay</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity style={styles.payTransferButton} onPress={() => pay(item.bank_id, item.id)}>
+                  <TouchableOpacity style={styles.payTransferButton} onPress={() => navigation.navigate('Transfer between accounts', { 
+                      bankId: item.bank_id, 
+                      accountId: item.id 
+                    })}>
                     <Text style={styles.payTransferButtonText}>Transfer</Text>
                   </TouchableOpacity>
                 </View>
@@ -116,99 +119,6 @@ export function AccountsScreen({ navigation }) {
     </View>
   );
 };
-
-function pay(bankId, accountId) {
-  // TODO: add new screen 'Transfer between accounts' that allows you to pick account and pick amount
-  const recipientBankId = "hsbc-test"
-  const recipientAccountId = "pavan_k"
-  getAsyncStorage('obpToken')
-    .then((token) => {
-      getChallengeTypes(bankId, accountId, token)
-      .then((challengeTypes) => {
-        const challengeType = challengeTypes[0]
-        initiateTransactionRequest(bankId, accountId, recipientBankId, recipientAccountId, challengeType, token)
-        .then((initiateResponse) => {
-          if(initiateResponse.code != null && initiateResponse.code == 400) {
-            console.error(initiateResponse)
-          }
-          else if (initiateResponse.challenges != null) {
-              // answer the challenge
-              const challengeQuery = initiateResponse.challenges[0].id
-              const transactionReqId = initiateResponse.id
-  
-              const challengeResponse = answerChallenge(bankId, accountId, transactionReqId, challengeQuery) 
-              if("error" in challengeResponse) {
-                console.error(challengeResponse)
-              }
-              console.log(`Transaction status: ${challengeResponse.status}`);
-              console.log(`Transaction created: ${challengeResponse.transaction_ids}`);
-          }
-          else {
-              // There was no challenge, transaction was created immediately
-              console.log("Transaction was successfully created:")
-              console.log(initiateResponse)
-          }
-        });
-      });
-    });
-}
-
-const answerChallenge = async (bankId, accountId, transactionReqId, challengeQuery) => {
-  let response = await fetch(joinPath(base_url, `/obp/v4.0.0/banks/${bankId}/accounts/${accountId}/owner/transaction-request-types/sandbox/transaction-requests/${transactionReqId}/challenge`), {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `DirectLogin token="${token}"`
-    },
-    body: JSON.stringify({
-      id: challengeQuery,
-      answer: 123456
-    })
-  });
-  let json = await response.json();
-  return json
-}
-
-const getChallengeTypes = async (bankId, accountId, token) => {
-  let response = await fetch(joinPath(base_url, `/obp/v4.0.0/banks/${bankId}/accounts/${accountId}/owner/transaction-request-types`), {
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `DirectLogin token="${token}"`
-    }
-  });
-  let json = await response.json();
-  const types = json.transaction_request_types
-  const res = []
-  types.forEach(function (type, index) {
-    res.push(type.value)
-  });
-  return res
-}
-
-const initiateTransactionRequest = async (senderBankId, senderAccountId, recipientBankId, recipientAccountId, challengeType, token) => {
-
-  let response = await fetch(joinPath(base_url, `/obp/v4.0.0/banks/${senderBankId}/accounts/${senderAccountId}/owner/transaction-request-types/${challengeType}/transaction-requests`), {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `DirectLogin token="${token}"`
-    },
-    body: JSON.stringify({
-      to: {
-        account_id: recipientAccountId,
-        bank_id: recipientBankId
-      },
-      value: {
-        currency: 'EUR',
-        amount: '10'
-      },
-      description: "Rent",
-      challenge_type: challengeType
-    })
-  })
-  let json = await response.json();
-  return json
-}
 
 const styles = StyleSheet.create({
     container: {

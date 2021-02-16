@@ -11,6 +11,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getAsyncStorage } from '../util/StorageHelper';
 import { GREEN_MINT, GREEN_PARIS, GREY_LIGHT } from '../resources/styles/colours';
 import { FONT_SIZE_SMALL, FONT_SIZE_STANDARD } from '../resources/styles/typography';
+import { TransferScreen } from './banking/TransferScreen.js';
 
 const Stack = createStackNavigator();
 
@@ -19,6 +20,7 @@ const AccountsNavStack = () => {
     <Stack.Navigator initialRouteName="Accounts">
       <Stack.Screen name="Accounts" component={AccountsScreen}/>
       <Stack.Screen name="Add Account" component={AddAccountScreen}/>
+      <Stack.Screen name="Transfer between accounts" component={TransferScreen}/>
     </Stack.Navigator>
   );
 }
