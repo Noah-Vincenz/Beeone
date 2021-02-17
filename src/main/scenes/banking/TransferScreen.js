@@ -53,64 +53,76 @@ function transfer(bankId, accountId) {
             }
           });
         });
-    });
+    })
+    .catch((error) => console.error(error));
 }
   
 const answerChallenge = async (bankId, accountId, transactionReqId, challengeQuery) => {
-    let response = await fetch(joinPath(base_url, `/obp/v4.0.0/banks/${bankId}/accounts/${accountId}/owner/transaction-request-types/sandbox/transaction-requests/${transactionReqId}/challenge`), {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `DirectLogin token="${token}"`
-      },
-      body: JSON.stringify({
-        id: challengeQuery,
-        answer: 123456
-      })
-    });
-    let json = await response.json();
-    return json
+    try {
+        let response = await fetch(joinPath(base_url, `/obp/v4.0.0/banks/${bankId}/accounts/${accountId}/owner/transaction-request-types/sandbox/transaction-requests/${transactionReqId}/challenge`), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `DirectLogin token="${token}"`
+            },
+            body: JSON.stringify({
+                id: challengeQuery,
+                answer: 123456
+            })
+        });
+        let json = await response.json();
+        return json;
+    }
+    catch (error) {
+        console.error(error);
+    }
 }
   
 const getChallengeTypes = async (bankId, accountId, token) => {
-    let response = await fetch(joinPath(base_url, `/obp/v4.0.0/banks/${bankId}/accounts/${accountId}/owner/transaction-request-types`), {
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `DirectLogin token="${token}"`
-        }
-    });
-    let json = await response.json();
-    console.log(`json ${JSON.stringify(json)}`)
-    const types = json.transaction_request_types
-    const res = []
-    types.forEach(function (type, index) {
-      res.push(type.value)
-    });
-    return res
+    try {
+        let response = await fetch(joinPath(base_url, `/obp/v4.0.0/banks/${bankId}/accounts/${accountId}/owner/transaction-request-types`), {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `DirectLogin token="${token}"`
+            }
+        });
+        let json = await response.json();
+        const challengeTypes = []
+        json.transaction_request_types.forEach(function (type, index) {
+            challengeTypes.push(type.value)
+        });
+        return challengeTypes;
+    } catch (error) {
+        console.error(error);
+    }
 }
   
 const initiateTransactionRequest = async (senderBankId, senderAccountId, recipientBankId, recipientAccountId, challengeType, token) => {
-    let response = await fetch(joinPath(base_url, `/obp/v4.0.0/banks/${senderBankId}/accounts/${senderAccountId}/owner/transaction-request-types/${challengeType}/transaction-requests`), {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `DirectLogin token="${token}"`
-        },
-        body: JSON.stringify({
-            to: {
-                account_id: recipientAccountId,
-                bank_id: recipientBankId
+    try {
+        let response = await fetch(joinPath(base_url, `/obp/v4.0.0/banks/${senderBankId}/accounts/${senderAccountId}/owner/transaction-request-types/${challengeType}/transaction-requests`), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `DirectLogin token="${token}"`
             },
-            value: {
-                currency: 'EUR',
-                amount: '10'
-            },
-            description: "Rent",
-            challenge_type: challengeType
-        })
-    })
-    let json = await response.json();
-    return json
+            body: JSON.stringify({
+                to: {
+                    account_id: recipientAccountId,
+                    bank_id: recipientBankId
+                },
+                value: {
+                    currency: 'EUR',
+                    amount: '10'
+                },
+                description: "Rent",
+                challenge_type: challengeType
+            })
+        });
+        let json = await response.json();
+        return json
+    } catch(error) {
+        console.error(error);
+    }
 }  
 
 const styles = StyleSheet.create({
