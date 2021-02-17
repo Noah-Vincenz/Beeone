@@ -18,15 +18,11 @@ export function AccountsScreen({ navigation }) {
       getBankAndAccountIds(token)
       .then((accounts) => {
         const promises = []; // to store all returned promises
-        const listOfAccounts = []
         accounts.bankIds.forEach(function (item, index) { // we use promises here to run asynchronous operations in parallel
-          promises.push(getAccount(item, accounts.accountIds[index], listOfAccounts, token));
+          promises.push(getAccount(item, accounts.accountIds[index], token));
         }); 
-        Promise.all(promises).then((values) => { // Promise.all() to collect results in order
+        Promise.all(promises).then((listOfAccounts) => { // Promise.all() to collect results in order
           // only when all promises have been collected this is executed
-          console.log(values);
-          console.log("--");
-          console.log(listOfAccounts);
           setAccounts(listOfAccounts);
           setLoading(false);
         });     

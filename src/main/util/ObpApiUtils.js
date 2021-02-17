@@ -45,7 +45,7 @@ export const getBankAndAccountIds = async (token) => {
  * @param {Array} listOfAccounts 
  * @param {string} token 
  */
-export function getAccount(bankId, accountId, listOfAccounts, token) {
+export function getAccount(bankId, accountId, token) {
     return new Promise(resolve => {
       fetch(joinPath(base_url, `/obp/v4.0.0/my/banks/${bankId}/accounts/${accountId}/account`), {
         headers: {
@@ -55,7 +55,6 @@ export function getAccount(bankId, accountId, listOfAccounts, token) {
       })
       .then((response) => response.json())
       .then((json) => {
-        listOfAccounts.push(json);
         resolve(json);
       })
       .catch((error) => {
