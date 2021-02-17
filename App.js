@@ -10,9 +10,9 @@ import { SignInScreen } from 'src/scenes/SignInScreen.js';
 import { SplashScreen } from 'src/scenes/SplashScreen.js';
 import { StyleSheet, View, Alert } from 'react-native';
 import { State } from 'react-native-gesture-handler';
-import { MyContext } from './src/main/scenes/util/Context';
+import { MyContext } from './src/main/util/Context';
 import { ObpApiUtils } from 'src/util/ObpApiUtils.js';
-import { joinPath, base_url } from './src/main/util/ObpApiUtils';
+import { joinPath, base_url, login } from './src/main/util/ObpApiUtils';
 import {reducer, initialState} from './src/main/reducer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getAsyncStorage, setAsyncStorage } from 'src/util/StorageHelper.js'
@@ -52,14 +52,7 @@ export default App = () => {
         console.log(`Login credentials submitted: ${data.username}, ${data.password}`)
         // send username and password to server and get token
         // persist token using `AsyncStorage`
-        fetch(joinPath(base_url, '/my/logins/direct'), {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `DirectLogin username="${data.username}",password="${data.password}",consumer_key="${consumerKey}"`
-          },
-        })
-        .then((response) => response.json())
+        login(data.username, data.password, consumerKey)
         .then((json) => { 
           if (json.token == null || json.token == undefined || json.token == '') {
             Alert.alert(

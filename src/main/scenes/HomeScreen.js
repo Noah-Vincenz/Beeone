@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { FONT_WEIGHT_BOLD, FONT_SIZE_HEADING } from 'resources/styles/typography';
 import { WHITE, SECONDARY } from 'resources/styles/colours'
 import { StackActions } from '@react-navigation/native';
-import { MyContext } from './util/Context';
+import { MyContext } from '../util/Context';
 import { NavigationActions, CommonActions } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getAsyncStorage } from '../util/StorageHelper';

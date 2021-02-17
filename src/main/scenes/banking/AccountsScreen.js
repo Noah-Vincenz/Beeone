@@ -4,51 +4,9 @@ import { FONT_WEIGHT_BOLD, FONT_SIZE_HEADING } from 'resources/styles/typography
 import { WHITE, SECONDARY } from 'resources/styles/colours'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getAsyncStorage } from '../../util/StorageHelper';
-import { base_url, joinPath } from '../../util/ObpApiUtils';
-import { MyContext } from '../util/Context';
+import { base_url, joinPath, getAccount, getBankAndAccountIds } from '../../util/ObpApiUtils';
 import { BLACK, GREEN_FOREST, GREEN_MINT, GREEN_PARIS, GREY_DARK, GREY_LIGHT, GREY_MEDIUM } from '../../resources/styles/colours';
 import { FONT_SIZE_SMALL, FONT_SIZE_STANDARD, FONT_WEIGHT_REGULAR } from '../../resources/styles/typography';
-
-function getLogoSourcePath(bankId) {
-  switch (bankId) {
-    case 'rbs': return require('../../resources/img/rbs-logo.png');
-    case 'hsbc-test': return require('../../resources/img/hsbc-logo.png');
-    case 'testowy_bank_id': return require('../../resources/img/db-logo.png');
-    default: return require('../../resources/img/rbs-logo.png');
-  }
-}
-
-const getBankAndAccountIds = async (token) => {
-  let response = await fetch(joinPath(base_url, `/obp/v4.0.0/my/accounts`), {
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `DirectLogin token="${token}"`
-    },
-  })
-  let json = await response.json();
-  const bankIds = json.accounts.map(x => x.bank_id) // return array of account ids
-  const accountIds = json.accounts.map(x => x.id) // return array of account ids
-  return {bankIds, accountIds}
-}
-
-function getAccount(bankId, accountId, listOfAccounts, token) {
-  return new Promise(resolve => {
-    fetch(joinPath(base_url, `/obp/v4.0.0/my/banks/${bankId}/accounts/${accountId}/account`), {
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `DirectLogin token="${token}"`
-      },
-    })
-    .then((response) => response.json())
-    .then((json) => {
-      listOfAccounts.push(json);
-      resolve(json);
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-  });
-}
 
 export function AccountsScreen({ navigation }) {
   const [isLoading, setLoading] = useState(true);
@@ -61,11 +19,14 @@ export function AccountsScreen({ navigation }) {
       .then((accounts) => {
         const promises = []; // to store all returned promises
         const listOfAccounts = []
-        accounts.bankIds.forEach(function (item, index) {
-          promises.push(getAccount(accounts.bankIds[index], accounts.accountIds[index], listOfAccounts, token));
-        });
-        Promise.all(promises).then(() => {
+        accounts.bankIds.forEach(function (item, index) { // we use promises here to run asynchronous operations in parallel
+          promises.push(getAccount(item, accounts.accountIds[index], listOfAccounts, token));
+        }); 
+        Promise.all(promises).then((values) => { // Promise.all() to collect results in order
           // only when all promises have been collected this is executed
+          console.log(values);
+          console.log("--");
+          console.log(listOfAccounts);
           setAccounts(listOfAccounts);
           setLoading(false);
         });     
@@ -119,6 +80,15 @@ export function AccountsScreen({ navigation }) {
     </View>
   );
 };
+
+function getLogoSourcePath(bankId) {
+  switch (bankId) {
+    case 'rbs': return require('../../resources/img/rbs-logo.png');
+    case 'hsbc-test': return require('../../resources/img/hsbc-logo.png');
+    case 'testowy_bank_id': return require('../../resources/img/db-logo.png');
+    default: return require('../../resources/img/rbs-logo.png');
+  }
+}
 
 const styles = StyleSheet.create({
     container: {
