@@ -10,13 +10,13 @@ import { StackActions } from '@react-navigation/native';
 import { getLogoSourcePath } from 'src/util/AccountUtils';
 
 export function ChooseAccountScreen({ route, navigation }) {
-    const { accountsList, fromAccount, toAccount } = route.params;
+    const { accountsList, fromAccount } = route.params;
 
     return (
         <View style={styles.container}>
             <FlatList 
                 style={styles.accountsListContainer}
-                data={accountsList}
+                data={accountsList.filter(item => item.id != fromAccount.id)}
                 keyExtractor={(item, index) => `list-item-${index}`}
                 renderItem={({item}) => 
                     <TouchableOpacity style={styles.accountContainer} onPress={() => { 

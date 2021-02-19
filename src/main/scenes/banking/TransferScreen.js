@@ -35,8 +35,7 @@ export function TransferScreen({ route, navigation }) {
                 <TouchableOpacity style={styles.accountContainer} onPress={() => {
                     navigation.navigate('Choose account', {
                         accountsList: accountsList,
-                        fromAccount: fromAccount,
-                        toAccount: toAccount
+                        fromAccount: fromAccount
                     });
                     }}>
                     <View style={styles.accountContainerTop}>
@@ -53,8 +52,7 @@ export function TransferScreen({ route, navigation }) {
                 <TouchableOpacity style={styles.accountContainer} onPress={() => { 
                     navigation.navigate('Choose account', {
                         accountsList: accountsList,
-                        fromAccount: fromAccount,
-                        toAccount: toAccount
+                        fromAccount: fromAccount
                     });
                     }}>
                     <View style={styles.accountContainerTop}>
