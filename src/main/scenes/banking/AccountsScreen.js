@@ -3,10 +3,11 @@ import { ActivityIndicator, StyleSheet, FlatList, Text, View, TouchableOpacity, 
 import { FONT_WEIGHT_BOLD, FONT_SIZE_HEADING } from 'resources/styles/typography';
 import { WHITE, SECONDARY } from 'resources/styles/colours'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getAsyncStorage } from '../../util/StorageHelper';
-import { base_url, joinPath, getAccount, getBankAndAccountIds } from '../../util/ObpApiUtils';
-import { BLACK, GREEN_FOREST, GREEN_MINT, GREEN_PARIS, GREY_DARK, GREY_LIGHT, GREY_MEDIUM } from '../../resources/styles/colours';
-import { FONT_SIZE_SMALL, FONT_SIZE_STANDARD, FONT_WEIGHT_REGULAR } from '../../resources/styles/typography';
+import { getAsyncStorage } from 'src/util/StorageHelper';
+import { base_url, joinPath, getAccount, getBankIdsAndAccountIdsAndAccountTypes } from 'src/util/ObpApiUtils';
+import { BLACK, GREEN_FOREST, GREEN_MINT, GREEN_PARIS, GREY_DARK, GREY_LIGHT, GREY_MEDIUM } from 'resources/styles/colours';
+import { FONT_SIZE_SMALL, FONT_SIZE_STANDARD, FONT_WEIGHT_REGULAR } from 'resources/styles/typography';
+import { getLogoSourcePath } from 'src/util/AccountUtils';
 
 export function AccountsScreen({ navigation }) {
   const [isLoading, setLoading] = useState(true);
@@ -15,11 +16,11 @@ export function AccountsScreen({ navigation }) {
   useEffect(() => {
     getAsyncStorage('obpToken')
     .then((token) => {
-      getBankAndAccountIds(token)
-      .then((accounts) => {
+      getBankIdsAndAccountIdsAndAccountTypes(token)
+      .then((bankIdsAndAccountIdsAndAccountTypes) => {
         const promises = []; // to store all returned promises
-        accounts.bankIds.forEach(function (item, index) { // we use promises here to run asynchronous operations in parallel
-          promises.push(getAccount(item, accounts.accountIds[index], token));
+        bankIdsAndAccountIdsAndAccountTypes.bankIds.forEach(function (item, index) { // we use promises here to run asynchronous operations in parallel
+          promises.push(getAccount(item, bankIdsAndAccountIdsAndAccountTypes.accountIds[index], bankIdsAndAccountIdsAndAccountTypes.accountTypes[index], token));
         }); 
         Promise.all(promises).then((listOfAccounts) => { // Promise.all() to collect results in order
           // only when all promises have been collected this is executed
@@ -57,8 +58,12 @@ export function AccountsScreen({ navigation }) {
                     <Text style={styles.payTransferButtonText}>Pay</Text>
                   </TouchableOpacity>
                   <TouchableOpacity style={styles.payTransferButton} onPress={() => navigation.navigate('Transfer between accounts', { 
-                      bankId: item.bank_id, 
-                      accountId: item.id 
+                      screen: 'Transfer between accounts', // this needs to be specifically stated to allow passing of params into nested navigator
+                      params: {
+                        bankId: item.bank_id, 
+                        accountId: item.id,
+                        accountsList: accounts
+                      }
                     })}>
                     <Text style={styles.payTransferButtonText}>Transfer</Text>
                   </TouchableOpacity>
@@ -76,15 +81,6 @@ export function AccountsScreen({ navigation }) {
     </View>
   );
 };
-
-function getLogoSourcePath(bankId) {
-  switch (bankId) {
-    case 'rbs': return require('../../resources/img/rbs-logo.png');
-    case 'hsbc-test': return require('../../resources/img/hsbc-logo.png');
-    case 'testowy_bank_id': return require('../../resources/img/db-logo.png');
-    default: return require('../../resources/img/rbs-logo.png');
-  }
-}
 
 const styles = StyleSheet.create({
     container: {

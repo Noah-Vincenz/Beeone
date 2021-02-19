@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
+import { Icon } from 'react-native-elements'
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import { AccountsScreen } from 'src/scenes/banking/AccountsScreen.js';
@@ -9,28 +10,43 @@ import { AddCategoryScreen } from 'src/scenes/banking/AddCategoryScreen.js';
 import { SpendingScreen } from 'src/scenes/banking/SpendingScreen.js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getAsyncStorage } from '../util/StorageHelper';
-import { GREEN_MINT, GREEN_PARIS, GREY_LIGHT } from '../resources/styles/colours';
-import { FONT_SIZE_SMALL, FONT_SIZE_STANDARD } from '../resources/styles/typography';
+import { GREEN_MINT, GREEN_PARIS, GREY_LIGHT } from 'resources/styles/colours';
+import { FONT_SIZE_SMALL, FONT_SIZE_STANDARD } from 'resources/styles/typography';
 import { TransferScreen } from './banking/TransferScreen.js';
+import { ChooseAccountScreen } from './banking/ChooseAccountScreen.js';
+import { StackActions } from '@react-navigation/native';
 
-const Stack = createStackNavigator();
+const MainStack = createStackNavigator();
+const TransferStack = createStackNavigator();
+
+const TransferNavStack = () => {
+  const navigation = useNavigation();
+  return (
+    <TransferStack.Navigator mode="modal" initialRouteName="Transfer between accounts">
+      <TransferStack.Screen name="Transfer between accounts" component={TransferScreen}/>
+      <TransferStack.Screen name="Choose account" component={ChooseAccountScreen}/>
+    </TransferStack.Navigator>
+  );
+}
 
 const AccountsNavStack = () => {
   return (
-    <Stack.Navigator initialRouteName="Accounts">
-      <Stack.Screen name="Accounts" component={AccountsScreen}/>
-      <Stack.Screen name="Add Account" component={AddAccountScreen}/>
-      <Stack.Screen name="Transfer between accounts" component={TransferScreen}/>
-    </Stack.Navigator>
+    <MainStack.Navigator initialRouteName="Accounts">
+      <MainStack.Screen name="Accounts" component={AccountsScreen}/>
+      <MainStack.Screen name="Add Account" component={AddAccountScreen}/>
+      <MainStack.Screen name="Transfer between accounts" component={TransferNavStack} options={{ headerShown: false }}/>
+      {/* <MainStack.Screen name="Transfer between accounts" component={TransferScreen}/>
+      <MainStack.Screen name="Choose account" component={ChooseAccountScreen}/> */}
+    </MainStack.Navigator>
   );
 }
 
 const SpendingNavStack = () => {
   return (
-    <Stack.Navigator initialRouteName="Spending">
-      <Stack.Screen name="Spending" component={SpendingScreen}/>
-      <Stack.Screen name="Add Category" component={AddCategoryScreen}/>
-    </Stack.Navigator>
+    <MainStack.Navigator initialRouteName="Spending">
+      <MainStack.Screen name="Spending" component={SpendingScreen}/>
+      <MainStack.Screen name="Add Category" component={AddCategoryScreen}/>
+    </MainStack.Navigator>
   );
 }
 

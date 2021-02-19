@@ -10,13 +10,13 @@ import { SignInScreen } from 'src/scenes/SignInScreen.js';
 import { SplashScreen } from 'src/scenes/SplashScreen.js';
 import { StyleSheet, View, Alert } from 'react-native';
 import { State } from 'react-native-gesture-handler';
-import { MyContext } from './src/main/util/Context';
+import { MyContext } from 'src/util/Context';
 import { ObpApiUtils } from 'src/util/ObpApiUtils.js';
-import { joinPath, base_url, login } from './src/main/util/ObpApiUtils';
-import {reducer, initialState} from './src/main/reducer';
+import { joinPath, base_url, login } from 'src/util/ObpApiUtils';
+import {reducer, initialState} from 'src/reducer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getAsyncStorage, setAsyncStorage } from 'src/util/StorageHelper.js'
-import { removeAsyncStorage } from './src/main/util/StorageHelper';
+import { removeAsyncStorage } from 'src/util/StorageHelper';
 
 const Stack = createStackNavigator();
 

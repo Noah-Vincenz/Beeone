@@ -6,13 +6,21 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getAsyncStorage } from '../../util/StorageHelper';
 import { base_url, joinPath, getChallengeTypes, initiateTransactionRequest, answerChallenge } from '../../util/ObpApiUtils';
 import { GREY_LIGHT } from '../../resources/styles/colours';
+import { StackActions } from '@react-navigation/native';
 
 export function TransferScreen({ route, navigation }) {
-    const { bankId, accountId } = route.params;
+    const { bankId, accountId, accountsList } = route.params;
 
     return (
         <View style={styles.container}>
-            <Text>Transfer between accounts</Text>
+            <TouchableOpacity style={styles.buttonStyles} onPress={() => {
+                navigation.navigate('Choose account', {
+                    accountsList: accountsList
+                });
+                }}>
+                <Text style={styles.buttonText}>To:</Text>
+                <Text style={styles.buttonText}>Choose account</Text>
+            </TouchableOpacity>
             <TouchableOpacity style={styles.buttonStyles} onPress={() => transfer(bankId, accountId)}>
                 <Text style={styles.buttonText}>Done</Text>
             </TouchableOpacity>

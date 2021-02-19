@@ -18,7 +18,7 @@ export const login = async (username, password, consumerKey) => {
     }
 }
 
-export const getBankAndAccountIds = async (token) => {
+export const getBankIdsAndAccountIdsAndAccountTypes = async (token) => {
     try {
       let response = await fetch(joinPath(base_url, `/obp/v4.0.0/my/accounts`), {
         headers: {
@@ -29,7 +29,8 @@ export const getBankAndAccountIds = async (token) => {
       let json = await response.json();
       const bankIds = json.accounts.map(x => x.bank_id) // return array of account ids
       const accountIds = json.accounts.map(x => x.id) // return array of account ids
-      return {bankIds, accountIds};
+      const accountTypes = json.accounts.map(x => x.account_type) // return array of account types
+      return {bankIds, accountIds, accountTypes};
     } catch(error) {
       console.error(error);
     }
@@ -45,7 +46,7 @@ export const getBankAndAccountIds = async (token) => {
  * @param {Array} listOfAccounts 
  * @param {string} token 
  */
-export function getAccount(bankId, accountId, token) {
+export function getAccount(bankId, accountId, accountType, token) {
     return new Promise(resolve => {
       fetch(joinPath(base_url, `/obp/v4.0.0/my/banks/${bankId}/accounts/${accountId}/account`), {
         headers: {
@@ -55,6 +56,7 @@ export function getAccount(bankId, accountId, token) {
       })
       .then((response) => response.json())
       .then((json) => {
+        json['account_type'] = accountType;
         resolve(json);
       })
       .catch((error) => {
