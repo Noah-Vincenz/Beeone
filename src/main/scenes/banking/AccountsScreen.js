@@ -12,6 +12,20 @@ import { getLogoSourcePath } from 'src/util/AccountUtils';
 export function AccountsScreen({ navigation }) {
   const [isLoading, setLoading] = useState(true);
   const [accounts, setAccounts] = useState([]);
+  const [isAddButtonVisible, setAddButtonVisible] = useState(true);
+
+  const handleScroll = (nativeEvent) => {
+    if (isCloseToBottom(nativeEvent)) {
+      setAddButtonVisible(false);
+    }
+  }
+
+  const handleNoScroll = () => setAddButtonVisible(true);
+
+  const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
+    const paddingToBottom = 20;
+    return layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom;
+  };
 
   useEffect(() => {
     getAsyncStorage('obpToken')
@@ -34,50 +48,53 @@ export function AccountsScreen({ navigation }) {
   return (
     <View style={styles.container}>
       {isLoading ? <ActivityIndicator/> : (
-        <View style={styles.accountsListContainer}>
-          <FlatList 
-            data={accounts}
-            keyExtractor={(item, index) => `list-item-${index}`}
-            renderItem={({item}) => 
-              <View style={styles.accountContainer}>
-                <View style={styles.accountContainerTop}>
-                  <Image
-                  style={styles.bankLogo}
-                  source={getLogoSourcePath(item.bank_id)}
-                  />
-                  <View style={styles.labelAndBankIdContainer}>
-                    <Text style={styles.accountContainerTopText}>{item.label} ({item.bank_id})</Text>
-                  </View>
-                </View>
-                <View style={styles.accountContainerMiddle}>
-                  <Text style={styles.accountContainerMiddleText}>{item.account_type}</Text>
-                  <Text style={styles.accountContainerMiddleText}>{item.balance.amount} ({item.balance.currency})</Text>
-                </View>
-                <View style={styles.accountContainerBottom}>
-                  <TouchableOpacity style={styles.payTransferButton}>
-                    <Text style={styles.payTransferButtonText}>Pay</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.payTransferButton} onPress={() => navigation.navigate('Transfer between accounts', { 
-                      screen: 'Transfer between accounts', // this needs to be specifically stated to allow passing of params into nested navigator
-                      params: {
-                        bankId: item.bank_id, 
-                        accountId: item.id,
-                        accountsList: accounts
-                      }
-                    })}>
-                    <Text style={styles.payTransferButtonText}>Transfer</Text>
-                  </TouchableOpacity>
+        <FlatList 
+          style={styles.accountsListContainer}
+          data={accounts}
+          keyExtractor={(item, index) => `list-item-${index}`}
+          onScroll={({nativeEvent}) => handleScroll(nativeEvent)} // hide button to add account if we are at the bottom of screen
+          onScrollEndDrag={handleNoScroll} // show button to add account
+          renderItem={({item}) => 
+            <View style={styles.accountContainer}>
+              <View style={styles.accountContainerTop}>
+                <Image
+                style={styles.bankLogo}
+                source={getLogoSourcePath(item.bank_id)}
+                />
+                <View style={styles.labelAndBankIdContainer}>
+                  <Text style={styles.accountContainerTopText}>{item.label} ({item.bank_id})</Text>
                 </View>
               </View>
-            }
-          />
+              <View style={styles.accountContainerMiddle}>
+                <Text style={styles.accountContainerMiddleText}>{item.account_type}</Text>
+                <Text style={styles.accountContainerMiddleText}>{item.balance.amount} ({item.balance.currency})</Text>
+              </View>
+              <View style={styles.accountContainerBottom}>
+                <TouchableOpacity style={styles.payTransferButton}>
+                  <Text style={styles.payTransferButtonText}>Pay</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.payTransferButton} onPress={() => navigation.navigate('Transfer between accounts', { 
+                    screen: 'Transfer between accounts', // this needs to be specifically stated to allow passing of params into nested navigator
+                    params: {
+                      bankId: item.bank_id, 
+                      accountId: item.id,
+                      accountsList: accounts
+                    }
+                  })}>
+                  <Text style={styles.payTransferButtonText}>Transfer</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          }
+        />
+      )}
+      {isAddButtonVisible && (
+        <View style={styles.addAccountContainer}>
+          <TouchableOpacity style={styles.addAccountButton} onPress={() => navigation.navigate('Add Account')}>
+            <Text style={styles.addAccountButtonText}>Add Account</Text>
+          </TouchableOpacity>
         </View>
       )}
-      <View style={styles.addAccountContainer}>
-        <TouchableOpacity style={styles.addAccountButton} onPress={() => navigation.navigate('Add Account')}>
-          <Text style={styles.addAccountButtonText}>Add Account</Text>
-        </TouchableOpacity>
-      </View>
     </View>
   );
 };
@@ -86,13 +103,14 @@ const styles = StyleSheet.create({
     container: {
       backgroundColor: GREY_LIGHT,
       flex: 1,
-      alignItems: 'center',
+      alignItems: 'center'
     },
     accountsListContainer: {
-      width: '95%',
-      height: '90%'
+      width: '100%',
     },
     accountContainer: {
+      alignSelf: 'center',
+      width: '97%',
       marginVertical: '1%',
       borderColor: GREY_MEDIUM,
       borderWidth: 1,

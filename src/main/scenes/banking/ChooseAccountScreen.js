@@ -10,33 +10,33 @@ import { StackActions } from '@react-navigation/native';
 import { getLogoSourcePath } from 'src/util/AccountUtils';
 
 export function ChooseAccountScreen({ route, navigation }) {
+
     const { accountsList } = route.params;
 
     return (
         <View style={styles.container}>
-            <View style={styles.accountsListContainer}>
-                <FlatList 
-                    data={accountsList}
-                    keyExtractor={(item, index) => `list-item-${index}`}
-                    renderItem={({item}) => 
-                        <TouchableOpacity style={styles.accountContainer} onPress={() => navigation.goBack()}>
-                            <View style={styles.accountContainerTop}>
-                                <Image
-                                style={styles.bankLogo}
-                                source={getLogoSourcePath(item.bank_id)}
-                                />
-                                <View style={styles.labelAndBankIdContainer}>
-                                    <Text style={styles.accountContainerTopText}>{item.label} ({item.bank_id})</Text>
-                                </View>
+            <FlatList 
+                style={styles.accountsListContainer}
+                data={accountsList}
+                keyExtractor={(item, index) => `list-item-${index}`}
+                renderItem={({item}) => 
+                    <TouchableOpacity style={styles.accountContainer} onPress={() => navigation.goBack()}>
+                        <View style={styles.accountContainerTop}>
+                            <Image
+                            style={styles.bankLogo}
+                            source={getLogoSourcePath(item.bank_id)}
+                            />
+                            <View style={styles.labelAndBankIdContainer}>
+                                <Text style={styles.accountContainerTopText}>{item.label} ({item.bank_id})</Text>
                             </View>
-                            <View style={styles.accountContainerMiddle}>
-                                <Text style={styles.accountContainerMiddleText}>{item.account_type}</Text>
-                                <Text style={styles.accountContainerMiddleText}>{item.balance.amount} ({item.balance.currency})</Text>
-                            </View>
-                        </TouchableOpacity>
-                    }
-                />  
-            </View>  
+                        </View>
+                        <View style={styles.accountContainerMiddle}>
+                            <Text style={styles.accountContainerMiddleText}>{item.account_type}</Text>
+                            <Text style={styles.accountContainerMiddleText}>{item.balance.amount} ({item.balance.currency})</Text>
+                        </View>
+                    </TouchableOpacity>
+                }
+            /> 
         </View>
     );
 };
@@ -48,10 +48,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     accountsListContainer: {
-        width: '97%',
-        height: '100%'
+        width: '100%',
     },
     accountContainer: {
+        alignSelf: 'center',
+        width: '97%',
         marginVertical: '0.5%',
         borderColor: GREY_MEDIUM,
         borderWidth: 1,
