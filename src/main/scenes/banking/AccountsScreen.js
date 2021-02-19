@@ -76,9 +76,9 @@ export function AccountsScreen({ navigation }) {
                 <TouchableOpacity style={styles.payTransferButton} onPress={() => navigation.navigate('Transfer between accounts', { 
                     screen: 'Transfer between accounts', // this needs to be specifically stated to allow passing of params into nested navigator
                     params: {
-                      bankId: item.bank_id, 
-                      accountId: item.id,
-                      accountsList: accounts
+                      accountsList: accounts,
+                      fromAccount: item,
+                      toAccount: null
                     }
                   })}>
                   <Text style={styles.payTransferButtonText}>Transfer</Text>

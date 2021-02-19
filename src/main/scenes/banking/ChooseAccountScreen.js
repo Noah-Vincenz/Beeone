@@ -10,8 +10,7 @@ import { StackActions } from '@react-navigation/native';
 import { getLogoSourcePath } from 'src/util/AccountUtils';
 
 export function ChooseAccountScreen({ route, navigation }) {
-
-    const { accountsList } = route.params;
+    const { accountsList, fromAccount, toAccount } = route.params;
 
     return (
         <View style={styles.container}>
@@ -20,11 +19,17 @@ export function ChooseAccountScreen({ route, navigation }) {
                 data={accountsList}
                 keyExtractor={(item, index) => `list-item-${index}`}
                 renderItem={({item}) => 
-                    <TouchableOpacity style={styles.accountContainer} onPress={() => navigation.goBack()}>
+                    <TouchableOpacity style={styles.accountContainer} onPress={() => { 
+                        navigation.navigate('Transfer between accounts', {
+                            accountsList: accountsList,
+                            fromAccount: fromAccount,
+                            toAccount: item
+                        });
+                    }}>
                         <View style={styles.accountContainerTop}>
                             <Image
-                            style={styles.bankLogo}
-                            source={getLogoSourcePath(item.bank_id)}
+                                style={styles.bankLogo}
+                                source={getLogoSourcePath(item.bank_id)}
                             />
                             <View style={styles.labelAndBankIdContainer}>
                                 <Text style={styles.accountContainerTopText}>{item.label} ({item.bank_id})</Text>
