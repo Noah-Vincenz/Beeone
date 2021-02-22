@@ -9,8 +9,8 @@ import { GREY_LIGHT, GREY_MEDIUM, GREY_DARK, GREEN_PARIS } from 'resources/style
 import { StackActions } from '@react-navigation/native';
 import { getLogoSourcePath } from 'src/util/AccountUtils'
 
-export function TransferScreen({ route, navigation }) {
-    const { accountsList, fromAccount, toAccount } = route.params;
+export function PayScreen({ route, navigation }) {
+    const { fromAccount, toAccount } = route.params;
 
     return (
         <View style={styles.container}>
@@ -33,8 +33,7 @@ export function TransferScreen({ route, navigation }) {
             </View>
             {toAccount == null ? (
                 <TouchableOpacity style={styles.accountContainer} onPress={() => {
-                    navigation.navigate('Choose account', {
-                        accountsList: accountsList,
+                    navigation.navigate('Select recipient', {
                         fromAccount: fromAccount
                     });
                     }}>
@@ -44,13 +43,13 @@ export function TransferScreen({ route, navigation }) {
                         </View>
                     </View>
                     <View style={styles.accountContainerMiddle}>
-                        <Text style={styles.accountContainerMiddleText}>Choose Account</Text>
+                        <Text style={styles.accountContainerMiddleText}>Select Recipient</Text>
                         <Text style={styles.accountContainerMiddleText}></Text>
                     </View>
                 </TouchableOpacity>
             ) : (
                 <TouchableOpacity style={styles.accountContainer} onPress={() => { 
-                    navigation.navigate('Choose account', {
+                    navigation.navigate('Select recipient', {
                         accountsList: accountsList,
                         fromAccount: fromAccount
                     });
@@ -70,14 +69,12 @@ export function TransferScreen({ route, navigation }) {
                     </View>
                 </TouchableOpacity>
             )}
+            <Text>One off</Text>
+            <Text>Standing Order</Text>
             <TouchableOpacity style={styles.doneButton} onPress={() => {
                 if (toAccount != null) { 
                     transfer(fromAccount.bank_id, fromAccount.id, toAccount.bank_id, toAccount.id);
-                    // apply timeout to show updated account balances - unless transfer is taking longer than expected
-                    // we could add another API call here to check for the status of the transaction request
-                    setTimeout(navigation.goBack,
-                        250
-                    );
+                    navigation.navigate('Accounts');
                 }
             }}>
                 <Text style={styles.doneButtonText}>Done</Text>

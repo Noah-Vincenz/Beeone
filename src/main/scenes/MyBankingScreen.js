@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, Text, View, Button } from 'react-native';
 import { Icon } from 'react-native-elements'
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -14,18 +14,36 @@ import { GREEN_MINT, GREEN_PARIS, GREY_LIGHT } from 'resources/styles/colours';
 import { FONT_SIZE_SMALL, FONT_SIZE_STANDARD } from 'resources/styles/typography';
 import { TransferScreen } from './banking/TransferScreen.js';
 import { ChooseAccountScreen } from './banking/ChooseAccountScreen.js';
+import { SelectRecipientScreen } from './banking/SelectRecipientScreen.js';
+import { PaySomeoneNewScreen } from './banking/PaySomeoneNewScreen.js';
+import { PayScreen } from './banking/PayScreen.js';
 import { StackActions } from '@react-navigation/native';
 
 const MainStack = createStackNavigator();
 const TransferStack = createStackNavigator();
+const PayStack = createStackNavigator();
 
 const TransferNavStack = () => {
-  const navigation = useNavigation();
   return (
     <TransferStack.Navigator mode="modal" initialRouteName="Transfer between accounts">
       <TransferStack.Screen name="Transfer between accounts" component={TransferScreen}/>
       <TransferStack.Screen name="Choose account" component={ChooseAccountScreen}/>
     </TransferStack.Navigator>
+  );
+}
+
+const PayNavStack = () => {
+  const navigation = useNavigation()
+  return (
+    <PayStack.Navigator mode="modal" initialRouteName="Make a payment">
+      <PayStack.Screen name="Make a payment" component={PayScreen}/>
+      <TransferStack.Screen name="Select recipient" component={SelectRecipientScreen}/>
+      <TransferStack.Screen name="Pay someone new" component={PaySomeoneNewScreen} options={{
+        headerRight: () => (
+          <Button title="Create" onPress={() => navigation.navigate('Select recipient')} />
+        )
+      }}/>
+    </PayStack.Navigator>
   );
 }
 
@@ -35,8 +53,7 @@ const AccountsNavStack = () => {
       <MainStack.Screen name="Accounts" component={AccountsScreen}/>
       <MainStack.Screen name="Add Account" component={AddAccountScreen}/>
       <MainStack.Screen name="Transfer between accounts" component={TransferNavStack} options={{ headerShown: false }}/>
-      {/* <MainStack.Screen name="Transfer between accounts" component={TransferScreen}/>
-      <MainStack.Screen name="Choose account" component={ChooseAccountScreen}/> */}
+      <MainStack.Screen name="Make a payment" component={PayNavStack} options={{ headerShown: false }}/>
     </MainStack.Navigator>
   );
 }

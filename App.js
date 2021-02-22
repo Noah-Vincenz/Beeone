@@ -13,7 +13,7 @@ import { State } from 'react-native-gesture-handler';
 import { MyContext } from 'src/util/Context';
 import { ObpApiUtils } from 'src/util/ObpApiUtils.js';
 import { joinPath, base_url, login } from 'src/util/ObpApiUtils';
-import {reducer, initialState} from 'src/reducer';
+import { reducer, initialState } from 'src/reducer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getAsyncStorage, setAsyncStorage } from 'src/util/StorageHelper.js'
 import { removeAsyncStorage } from 'src/util/StorageHelper';

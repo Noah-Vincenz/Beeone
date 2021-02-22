@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useReducer } from 'react';
 import { ActivityIndicator, StyleSheet, FlatList, Text, View, TouchableOpacity, Image } from 'react-native';
 import { FONT_WEIGHT_BOLD, FONT_SIZE_HEADING } from 'resources/styles/typography';
 import { WHITE, SECONDARY } from 'resources/styles/colours'
@@ -8,6 +8,7 @@ import { base_url, joinPath, getAccount, getBankIdsAndAccountIdsAndAccountTypes 
 import { BLACK, GREEN_FOREST, GREEN_MINT, GREEN_PARIS, GREY_DARK, GREY_LIGHT, GREY_MEDIUM } from 'resources/styles/colours';
 import { FONT_SIZE_SMALL, FONT_SIZE_STANDARD, FONT_WEIGHT_REGULAR } from 'resources/styles/typography';
 import { getLogoSourcePath } from 'src/util/AccountUtils';
+import { accountsReducer, initialState } from 'src/scenes/banking/reducers/AccountsReducer.js';
 
 export function AccountsScreen({ navigation }) {
   const [isLoading, setLoading] = useState(true);
@@ -27,7 +28,7 @@ export function AccountsScreen({ navigation }) {
     return layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom;
   };
 
-  useEffect(() => {
+  const retrieveAccounts = () => {
     getAsyncStorage('obpToken')
     .then((token) => {
       getBankIdsAndAccountIdsAndAccountTypes(token)
@@ -41,10 +42,19 @@ export function AccountsScreen({ navigation }) {
           setAccounts(listOfAccounts);
           setLoading(false);
         });     
-      })
-      .catch((error) => console.error(error))
-    })
-  }, []);
+      });
+    });
+  }
+
+  useEffect(() => {
+    //S ubscribe for the focus listener to refresh the array of accounts whenever the screen is loaded
+    const unsubscribe = navigation.addListener('focus', () => {
+      console.log('Refreshed the accounts screen.');
+      retrieveAccounts()
+    });
+    return unsubscribe;
+  }, [navigation]);
+
   return (
     <View style={styles.container}>
       {isLoading ? <ActivityIndicator/> : (
@@ -70,15 +80,21 @@ export function AccountsScreen({ navigation }) {
                 <Text style={styles.accountContainerMiddleText}>{item.balance.amount} ({item.balance.currency})</Text>
               </View>
               <View style={styles.accountContainerBottom}>
-                <TouchableOpacity style={styles.payTransferButton}>
+                <TouchableOpacity style={styles.payTransferButton} onPress={() =>
+                  navigation.navigate('Make a payment', { 
+                    screen: 'Make a payment', // this needs to be specifically stated to allow passing of params into nested navigator
+                    params: {
+                      fromAccount: item
+                    }
+                  })}>
                   <Text style={styles.payTransferButtonText}>Pay</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.payTransferButton} onPress={() => navigation.navigate('Transfer between accounts', { 
+                <TouchableOpacity style={styles.payTransferButton} onPress={() => 
+                  navigation.navigate('Transfer between accounts', { 
                     screen: 'Transfer between accounts', // this needs to be specifically stated to allow passing of params into nested navigator
                     params: {
                       accountsList: accounts,
-                      fromAccount: item,
-                      toAccount: null
+                      fromAccount: item
                     }
                   })}>
                   <Text style={styles.payTransferButtonText}>Transfer</Text>

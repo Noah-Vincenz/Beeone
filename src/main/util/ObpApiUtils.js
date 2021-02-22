@@ -65,6 +65,21 @@ export function getAccount(bankId, accountId, accountType, token) {
     });
 }
 
+export const getCounterParties = async (bankId, accountId, token) => {
+    try {
+        let response = await fetch(joinPath(base_url, `/obp/v4.0.0/banks/${bankId}/accounts/${accountId}/owner/counterparties`), {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `DirectLogin token="${token}"`
+            }
+        });
+        let json = await response.json();
+        return json;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 export const answerChallenge = async (bankId, accountId, transactionReqId, challengeQuery) => {
     try {
         let response = await fetch(joinPath(base_url, `/obp/v4.0.0/banks/${bankId}/accounts/${accountId}/owner/transaction-request-types/sandbox/transaction-requests/${transactionReqId}/challenge`), {
