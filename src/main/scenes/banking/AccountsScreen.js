@@ -11,8 +11,7 @@ import { getLogoSourcePath } from 'src/util/AccountUtils';
 import { accountsReducer, initialState } from 'src/scenes/banking/reducers/AccountsReducer.js';
 
 export function AccountsScreen({ navigation }) {
-  const [isLoading, setLoading] = useState(true);
-  const [accounts, setAccounts] = useState([]);
+  const [state, dispatch] = useReducer(accountsReducer, initialState);
   const [isAddButtonVisible, setAddButtonVisible] = useState(true);
 
   const handleScroll = (nativeEvent) => {
@@ -39,15 +38,14 @@ export function AccountsScreen({ navigation }) {
         }); 
         Promise.all(promises).then((listOfAccounts) => { // Promise.all() to collect results in order
           // only when all promises have been collected this is executed
-          setAccounts(listOfAccounts);
-          setLoading(false);
+          dispatch({ type: 'LOAD_ACCOUNTS', listOfAccounts: listOfAccounts }); // sets loading to false and sets accounts
         });     
       });
     });
   }
 
   useEffect(() => {
-    //S ubscribe for the focus listener to refresh the array of accounts whenever the screen is loaded
+    // Subscribe for the focus listener to refresh the array of accounts whenever the screen is loaded
     const unsubscribe = navigation.addListener('focus', () => {
       console.log('Refreshed the accounts screen.');
       retrieveAccounts()
@@ -57,10 +55,10 @@ export function AccountsScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      {isLoading ? <ActivityIndicator/> : (
+      {state.isLoading ? <ActivityIndicator/> : (
         <FlatList 
           style={styles.accountsListContainer}
-          data={accounts}
+          data={state.accounts}
           keyExtractor={(item, index) => `list-item-${index}`}
           onScroll={({nativeEvent}) => handleScroll(nativeEvent)} // hide button to add account if we are at the bottom of screen
           onScrollEndDrag={handleNoScroll} // show button to add account
@@ -93,7 +91,7 @@ export function AccountsScreen({ navigation }) {
                   navigation.navigate('Transfer between accounts', { 
                     screen: 'Transfer between accounts', // this needs to be specifically stated to allow passing of params into nested navigator
                     params: {
-                      accountsList: accounts,
+                      accountsList: state.accounts,
                       fromAccount: item
                     }
                   })}>
