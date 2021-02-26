@@ -37,8 +37,8 @@ const PayNavStack = () => {
   return (
     <PayStack.Navigator mode="modal" initialRouteName="Make a payment">
       <PayStack.Screen name="Make a payment" component={PayScreen}/>
-      <TransferStack.Screen name="Select recipient" component={SelectRecipientScreen}/>
-      <TransferStack.Screen name="Pay someone new" component={PaySomeoneNewScreen} options={{
+      <PayStack.Screen name="Select recipient" component={SelectRecipientScreen}/>
+      <PayStack.Screen name="Pay someone new" component={PaySomeoneNewScreen} options={{
         headerRight: () => (
           <Button title="Create" onPress={() => navigation.navigate('Select recipient')} />
         )

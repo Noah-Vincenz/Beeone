@@ -19,7 +19,6 @@ export function SelectRecipientScreen({ route, navigation }) {
 
     useEffect(() => {
         const bootstrapAsync = async () => {
-
             getAsyncStorage('obpToken')
             .then((token) => {
                 getCounterParties(fromAccount.bank_id, fromAccount.id, token)
@@ -31,7 +30,7 @@ export function SelectRecipientScreen({ route, navigation }) {
             });
         }
         bootstrapAsync()
-    });
+    }, []);
 
     return (
         <View style={styles.container}>
