@@ -40,7 +40,7 @@ export function SelectRecipientScreen({ route, navigation }) {
                     fromAccount: fromAccount
                 });
             }}>
-                <Text style={styles.paySomeoneNewText}>Pay someone new</Text>
+                <Text style={styles.paySomeoneNewText}>Add new recipient</Text>
                 <View style={styles.paySomeoneNewIcon}>
                     <Icon
                     name='chevron-right'
