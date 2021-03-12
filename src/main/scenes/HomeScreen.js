@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     height: '25%',
     marginVertical: '2%',
     alignItems: 'center',
-    padding: '2%'
+    padding: '1%',
   },
   textInput: {
     width: '100%',
@@ -53,9 +53,11 @@ const styles = StyleSheet.create({
     color: GREY_DARK,
   },
   addPhotoButton: {
-    backgroundColor: GREY_MEDIUM,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: GREY_LIGHT,
     width: '100%',
-    marginVertical: '2%',
+    marginVertical: '1%',
     position:'absolute',
     bottom: 0,
     paddingHorizontal: '10%',
@@ -74,7 +76,6 @@ const styles = StyleSheet.create({
   buttonText: {
       textAlign: 'center',
       color: BLACK,
-      fontWeight: FONT_WEIGHT_BOLD,
       fontSize: FONT_SIZE_HEADING
   },
 });
