@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, StyleSheet, Text, View, Button } from 'react-native';
+import { ActivityIndicator, StyleSheet, Text, View, Button, Image, TouchableOpacity } from 'react-native';
 import { Icon } from 'react-native-elements'
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -37,7 +37,20 @@ const HomeNavStack = () => {
     <HomeStack.Navigator initialRouteName="Home">
       <HomeStack.Screen name="Home" component={HomeScreen} options={{
           headerLeft: () => (
-            <Button title="Sign out" onPress={signOut} />
+            <TouchableOpacity style={styles.signOutButton} onPress={signOut}>
+              <Image
+                source={require('resources/img/profile-icon.png')}
+                style={styles.signOutButtonImg}
+              />
+            </TouchableOpacity>
+          ),
+          headerRight: () => (
+            <TouchableOpacity style={styles.messagesButton}>
+              <Image
+                source={require('resources/img/message-icon.png')}
+                style={styles.messagesButtonImg}
+              />
+            </TouchableOpacity>
           )
       }}/>
     </HomeStack.Navigator>
@@ -75,7 +88,20 @@ const FinancesNavStack = () => {
     <FinancesStack.Navigator initialRouteName="Finances">
       <FinancesStack.Screen name="Finances" component={AccountsScreen} options={{
         headerLeft: () => (
-          <Button title="Sign out" onPress={signOut} />
+          <TouchableOpacity style={styles.signOutButton} onPress={signOut}>
+            <Image
+              source={require('resources/img/profile-icon.png')}
+              style={styles.signOutButtonImg}
+            />
+          </TouchableOpacity>
+        ),
+        headerRight: () => (
+          <TouchableOpacity style={styles.messagesButton}>
+            <Image
+              source={require('resources/img/message-icon.png')}
+              style={styles.messagesButtonImg}
+            />
+          </TouchableOpacity>
         )
       }}/>
       <FinancesStack.Screen name="Add Account" component={AddAccountScreen}/>
@@ -92,7 +118,20 @@ const ImpactNavStack = () => {
     <ImpactStack.Navigator initialRouteName="Impact">
         <ImpactStack.Screen name="Impact" component={ImpactScreen} options={{
           headerLeft: () => (
-            <Button title="Sign out" onPress={signOut} />
+            <TouchableOpacity style={styles.signOutButton} onPress={signOut}>
+              <Image
+                source={require('resources/img/profile-icon.png')}
+                style={styles.signOutButtonImg}
+              />
+            </TouchableOpacity>
+          ),
+          headerRight: () => (
+            <TouchableOpacity style={styles.messagesButton}>
+              <Image
+                source={require('resources/img/message-icon.png')}
+                style={styles.messagesButtonImg}
+              />
+            </TouchableOpacity>
           )
         }}/>
     </ImpactStack.Navigator>
@@ -106,7 +145,20 @@ const GoalsNavStack = () => {
     <GoalsStack.Navigator initialRouteName="Goals">
       <GoalsStack.Screen name="Goals" component={GoalsScreen} options={{
         headerLeft: () => (
-          <Button title="Sign out" onPress={signOut} />
+          <TouchableOpacity style={styles.signOutButton} onPress={signOut}>
+            <Image
+              source={require('resources/img/profile-icon.png')}
+              style={styles.signOutButtonImg}
+            />
+          </TouchableOpacity>
+        ),
+        headerRight: () => (
+          <TouchableOpacity style={styles.messagesButton}>
+            <Image
+              source={require('resources/img/message-icon.png')}
+              style={styles.messagesButtonImg}
+            />
+          </TouchableOpacity>
         )
       }}/>
       <GoalsStack.Screen name="Add Category" component={AddCategoryScreen}/>
@@ -131,3 +183,24 @@ export function ScreensTabNavigator() {
     </Tab.Navigator>
   );
 }
+
+const styles = StyleSheet.create({
+  signOutButton: {
+    paddingHorizontal: '10%',
+    flex: 1,
+    resizeMode: 'contain',
+  },
+  signOutButtonImg: {
+    width: 40,
+    height: 40,
+  },
+  messagesButton: {
+    paddingHorizontal: '10%',
+    flex: 1,
+    resizeMode: 'contain',
+  },
+  messagesButtonImg: {
+    width: 40,
+    height: 40,
+  },
+})
