@@ -10,6 +10,8 @@ import { getLogoSourcePath } from 'src/util/AccountUtils'
 
 export function PayScreen({ route, navigation }) {
     const { fromAccount, toAccount } = route.params;
+    const [amount, setAmount] = useState('0');
+    const [reference, setReference] = useState('');
 
     return (
         <View style={styles.container}>
@@ -68,11 +70,23 @@ export function PayScreen({ route, navigation }) {
                     </View>
                 </TouchableOpacity>
             )}
+            <Text style={styles.amountText}>Amount:</Text>
+            <TextInput style={styles.textInput}
+                keyboardType = 'numeric'
+                defaultValue = '0'
+                value={amount}
+                onChangeText={setAmount}
+            />
+            <TextInput style={styles.textInput}
+                placeholder="Reference"
+                value={reference}
+                onChangeText={setReference}
+            />
             <Text>One off</Text>
             <Text>Standing Order</Text>
             <TouchableOpacity style={styles.doneButton} onPress={() => {
                 if (toAccount != null) { 
-                    transfer(fromAccount.bank_id, fromAccount.id, toAccount.bank_id, toAccount.id);
+                    transfer(fromAccount.bank_id, fromAccount.id, toAccount.bank_id, toAccount.id, amount);
                     navigation.navigate('Accounts');
                 }
             }}>
@@ -82,13 +96,13 @@ export function PayScreen({ route, navigation }) {
     );
 };
 
-function transfer(fromBankId, fromAccountId, toBankId, toAccountId) {
+function transfer(fromBankId, fromAccountId, toBankId, toAccountId, amount) {
     getAsyncStorage('obpToken')
     .then((token) => {
         getChallengeTypes(fromBankId, fromAccountId, token)
         .then((challengeTypes) => {
           const challengeType = challengeTypes[0]
-          initiateTransactionRequest(fromBankId, fromAccountId, toBankId, toAccountId, challengeType, token)
+          initiateTransactionRequest(fromBankId, fromAccountId, toBankId, toAccountId, challengeType, token, amount)
           .then((initiateResponse) => {
             if(initiateResponse.code != null && initiateResponse.code == 400 || initiateResponse.code == 404) {
               console.error(initiateResponse)
@@ -165,6 +179,25 @@ const styles = StyleSheet.create({
         fontWeight: FONT_WEIGHT_REGULAR,
         fontSize: FONT_SIZE_SMALL,
         color: GREY_DARK
+    },
+    amountText: {
+        fontWeight: FONT_WEIGHT_REGULAR,
+        fontSize: FONT_SIZE_SMALL,
+        color: GREY_DARK,
+        alignSelf: 'flex-start',
+        paddingLeft: '2%'
+    },
+    textInput: {
+        borderRadius: 5,
+        width: '97%',
+        backgroundColor: WHITE,
+        height: '8%',
+        marginVertical: '1%',
+        justifyContent: "center",
+        padding: '2%',
+        fontWeight: FONT_WEIGHT_REGULAR,
+        fontSize: FONT_SIZE_STANDARD,
+        color: GREY_DARK,
     },
     doneButton: {
         width: '85%',

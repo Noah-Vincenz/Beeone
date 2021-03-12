@@ -169,13 +169,13 @@ const GoalsNavStack = () => {
 // Tab navigator for all screens
 export function ScreensTabNavigator() {
   return (
-    <Tab.Navigator tabBarOptions={{
+    <Tab.Navigator initialRouteName="Finances" tabBarOptions={{
         activeTintColor: GREEN_PARIS,
         inactiveTintColor: GREY_LIGHT,
         labelStyle: {
           fontSize: FONT_SIZE_SMALL
         },
-      }}>
+    }}>
       <Tab.Screen name="Home" component={HomeNavStack}/>
       <Tab.Screen name="Finances" component={FinancesNavStack}/>
       <Tab.Screen name="Impact" component={ImpactNavStack}/>

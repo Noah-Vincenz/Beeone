@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, StyleSheet, FlatList, Text, View, TouchableOpacity, Image } from 'react-native';
+import { ActivityIndicator, StyleSheet, FlatList, Text, View, TouchableOpacity, Image, TextInput } from 'react-native';
 import { FONT_WEIGHT_BOLD, FONT_SIZE_HEADING, FONT_WEIGHT_REGULAR, FONT_SIZE_STANDARD, FONT_SIZE_SMALL } from 'resources/styles/typography';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getAsyncStorage } from 'src/util/StorageHelper';
@@ -10,6 +10,7 @@ import { getLogoSourcePath } from 'src/util/AccountUtils'
 
 export function TransferScreen({ route, navigation }) {
     const { accountsList, fromAccount, toAccount } = route.params;
+    const [amount, setAmount] = useState('0');
 
     return (
         <View style={styles.container}>
@@ -69,9 +70,16 @@ export function TransferScreen({ route, navigation }) {
                     </View>
                 </TouchableOpacity>
             )}
+            <Text style={styles.amountText}>Amount:</Text>
+            <TextInput style={styles.textInput}
+                keyboardType = 'numeric'
+                defaultValue = '0'
+                value={amount}
+                onChangeText={setAmount}
+            />
             <TouchableOpacity style={styles.doneButton} onPress={() => {
                 if (toAccount != null) { 
-                    transfer(fromAccount.bank_id, fromAccount.id, toAccount.bank_id, toAccount.id);
+                    transfer(fromAccount.bank_id, fromAccount.id, toAccount.bank_id, toAccount.id, amount);
                     // apply timeout to show updated account balances - unless transfer is taking longer than expected
                     // we could add another API call here to check for the status of the transaction request
                     setTimeout(navigation.goBack,
@@ -85,13 +93,13 @@ export function TransferScreen({ route, navigation }) {
     );
 };
 
-function transfer(fromBankId, fromAccountId, toBankId, toAccountId) {
+function transfer(fromBankId, fromAccountId, toBankId, toAccountId, amount) {
     getAsyncStorage('obpToken')
     .then((token) => {
         getChallengeTypes(fromBankId, fromAccountId, token)
         .then((challengeTypes) => {
           const challengeType = challengeTypes[0]
-          initiateTransactionRequest(fromBankId, fromAccountId, toBankId, toAccountId, challengeType, token)
+          initiateTransactionRequest(fromBankId, fromAccountId, toBankId, toAccountId, challengeType, token, amount)
           .then((initiateResponse) => {
             if(initiateResponse.code != null && initiateResponse.code == 400 || initiateResponse.code == 404) {
               console.error(initiateResponse)
@@ -168,6 +176,25 @@ const styles = StyleSheet.create({
         fontWeight: FONT_WEIGHT_REGULAR,
         fontSize: FONT_SIZE_SMALL,
         color: GREY_DARK
+    },
+    amountText: {
+        fontWeight: FONT_WEIGHT_REGULAR,
+        fontSize: FONT_SIZE_SMALL,
+        color: GREY_DARK,
+        alignSelf: 'flex-start',
+        paddingLeft: '2%'
+    },
+    textInput: {
+        borderRadius: 5,
+        width: '97%',
+        backgroundColor: WHITE,
+        height: '8%',
+        marginVertical: '1%',
+        justifyContent: "center",
+        padding: '2%',
+        fontWeight: FONT_WEIGHT_REGULAR,
+        fontSize: FONT_SIZE_STANDARD,
+        color: GREY_DARK,
     },
     doneButton: {
         width: '85%',
