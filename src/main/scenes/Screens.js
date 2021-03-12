@@ -65,8 +65,8 @@ const PayNavStack = () => {
   
 const FinancesNavStack = () => {
     return (
-      <FinancesStack.Navigator initialRouteName="Accounts">
-        <FinancesStack.Screen name="Accounts" component={AccountsScreen}/>
+      <FinancesStack.Navigator initialRouteName="Finances">
+        <FinancesStack.Screen name="Finances" component={AccountsScreen}/>
         <FinancesStack.Screen name="Add Account" component={AddAccountScreen}/>
         <FinancesStack.Screen name="Transfer between accounts" component={TransferNavStack} options={{ headerShown: false }}/>
         <FinancesStack.Screen name="Make a payment" component={PayNavStack} options={{ headerShown: false }}/>
