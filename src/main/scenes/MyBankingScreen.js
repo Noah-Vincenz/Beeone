@@ -7,7 +7,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { AccountsScreen } from 'src/scenes/banking/AccountsScreen.js';
 import { AddAccountScreen } from 'src/scenes/banking/AddAccountScreen.js';
 import { AddCategoryScreen } from 'src/scenes/banking/AddCategoryScreen.js';
-import { SpendingScreen } from 'src/scenes/banking/SpendingScreen.js';
+// import { SpendingScreen } from 'src/scenes/banking/SpendingScreen.js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getAsyncStorage } from '../util/StorageHelper';
 import { GREEN_MINT, GREEN_PARIS, GREY_LIGHT } from 'resources/styles/colours';
@@ -58,14 +58,14 @@ const AccountsNavStack = () => {
   );
 }
 
-const SpendingNavStack = () => {
-  return (
-    <MainStack.Navigator initialRouteName="Spending">
-      <MainStack.Screen name="Spending" component={SpendingScreen}/>
-      <MainStack.Screen name="Add Category" component={AddCategoryScreen}/>
-    </MainStack.Navigator>
-  );
-}
+// const SpendingNavStack = () => {
+//   return (
+//     <MainStack.Navigator initialRouteName="Spending">
+//       <MainStack.Screen name="Spending" component={SpendingScreen}/>
+//       <MainStack.Screen name="Add Category" component={AddCategoryScreen}/>
+//     </MainStack.Navigator>
+//   );
+// }
 
 const Tab = createBottomTabNavigator();
 
@@ -79,7 +79,7 @@ export function MyBankingScreen({ navigation }) {
       },
     }}>
       <Tab.Screen name="Accounts" component={AccountsNavStack}/>
-      <Tab.Screen name="Spending" component={SpendingNavStack}/>
+      {/* <Tab.Screen name="Spending" component={SpendingNavStack}/> */}
     </Tab.Navigator>
   );
 }

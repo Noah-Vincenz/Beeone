@@ -17,6 +17,7 @@ import { reducer, initialState } from 'src/reducer.js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getAsyncStorage, setAsyncStorage } from 'src/util/StorageHelper.js'
 import { removeAsyncStorage } from 'src/util/StorageHelper';
+import { Screens } from 'src/scenes/Screens.js';
 
 const Stack = createStackNavigator();
 
@@ -98,7 +99,7 @@ export default App = () => {
               }}
             />
           ) : (
-            <Stack.Screen name="Home" component={HomeNavStack}/> // User is signed in
+            <Stack.Screen name="Accounts" component={Screens}/> // User is signed in
           )}
         </Stack.Navigator>
       </NavigationContainer>

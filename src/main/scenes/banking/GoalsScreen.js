@@ -4,7 +4,7 @@ import { FONT_WEIGHT_BOLD, FONT_SIZE_HEADING, FONT_WEIGHT_REGULAR } from 'resour
 import { WHITE, SECONDARY, GREEN_PARIS } from 'resources/styles/colours'
 import { GREY_LIGHT } from '../../resources/styles/colours';
 
-export function SpendingScreen({ navigation }) {
+export function GoalsScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <View style={styles.mainContainer}>
