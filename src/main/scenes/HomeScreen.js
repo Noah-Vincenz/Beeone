@@ -1,16 +1,10 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, TextInput } from 'react-native';
 import { FONT_WEIGHT_BOLD, FONT_SIZE_HEADING } from 'resources/styles/typography';
-import { StackActions } from '@react-navigation/native';
-import { MyContext } from '../util/Context';
-import { NavigationActions, CommonActions } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getAsyncStorage } from '../util/StorageHelper';
-import { ALERT, GREEN_KELLY, GREEN_MINT, GREEN_PARIS, GREY_LIGHT, GREY_MEDIUM, WHITE } from 'resources/styles/colours';
+import { GREEN_PARIS, GREY_LIGHT, WHITE } from 'resources/styles/colours';
 
 export function HomeScreen({ navigation }) {
   const [message, setMessage] = useState('');
-  const { signOut } = React.useContext(MyContext);
 
   return (
     <View style={styles.parentContainer}>
@@ -24,11 +18,6 @@ export function HomeScreen({ navigation }) {
         </View>
         <TouchableOpacity style={styles.addPhotoButton}>
             <Text style={styles.buttonText}>Add a photo</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.signOutContainer}>
-        <TouchableOpacity style={styles.signOutButton} onPress={signOut}>
-            <Text style={styles.buttonText}>Sign Out</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -60,20 +49,6 @@ const styles = StyleSheet.create({
       height: '15%',
       width: '100%',
       justifyContent: 'center',
-  },
-  signOutContainer:{
-    width: '100%',
-    position:'absolute',
-    bottom:0,
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  signOutButton: {
-    marginBottom: '10%',
-    padding: '2%',
-    backgroundColor: GREY_MEDIUM,
-    width: '50%',
-    borderRadius: 30,
   },
   buttonText: {
       textAlign: 'center',

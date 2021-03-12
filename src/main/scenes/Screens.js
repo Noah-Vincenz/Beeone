@@ -20,6 +20,7 @@ import { StackActions } from '@react-navigation/native';
 import { ImpactScreen } from './ImpactScreen';
 import { AccountsScreen } from './AccountsScreen';
 import { HomeScreen } from './HomeScreen';
+import { MyContext } from '../util/Context';
 
 const HomeStack = createStackNavigator();
 const TransferStack = createStackNavigator();
@@ -31,70 +32,90 @@ const Tab = createBottomTabNavigator();
 
 // Home Screens
 const HomeNavStack = () => {
+  const { signOut } = React.useContext(MyContext);
   return (
     <HomeStack.Navigator initialRouteName="Home">
-      <HomeStack.Screen name="Home" component={HomeScreen}/>
+      <HomeStack.Screen name="Home" component={HomeScreen} options={{
+          headerLeft: () => (
+            <Button title="Sign out" onPress={signOut} />
+          )
+      }}/>
     </HomeStack.Navigator>
   );
 }
 
 // Finances Screens
 const TransferNavStack = () => {
-    return (
-      <TransferStack.Navigator mode="modal" initialRouteName="Transfer between accounts">
-        <TransferStack.Screen name="Transfer between accounts" component={TransferScreen}/>
-        <TransferStack.Screen name="Choose account" component={ChooseAccountScreen}/>
-      </TransferStack.Navigator>
-    );
+  return (
+    <TransferStack.Navigator mode="modal" initialRouteName="Transfer between accounts">
+      <TransferStack.Screen name="Transfer between accounts" component={TransferScreen}/>
+      <TransferStack.Screen name="Choose account" component={ChooseAccountScreen}/>
+    </TransferStack.Navigator>
+  );
 }
-  
+
 const PayNavStack = () => {
-    const navigation = useNavigation()
-    return (
-      <PayStack.Navigator mode="modal" initialRouteName="Make a payment">
-        <PayStack.Screen name="Make a payment" component={PayScreen}/>
-        <PayStack.Screen name="Select recipient" component={SelectRecipientScreen}/>
-        <PayStack.Screen name="Pay someone new" component={PaySomeoneNewScreen} options={{
-          headerRight: () => (
-            <Button title="Create" onPress={() => navigation.navigate('Select recipient')} />
-          )
-        }}/>
-      </PayStack.Navigator>
-    );
+  const navigation = useNavigation()
+  return (
+    <PayStack.Navigator mode="modal" initialRouteName="Make a payment">
+      <PayStack.Screen name="Make a payment" component={PayScreen}/>
+      <PayStack.Screen name="Select recipient" component={SelectRecipientScreen}/>
+      <PayStack.Screen name="Pay someone new" component={PaySomeoneNewScreen} options={{
+        headerRight: () => (
+          <Button title="Create" onPress={() => navigation.navigate('Select recipient')} />
+        )
+      }}/>
+    </PayStack.Navigator>
+  );
 }
-  
+
 const FinancesNavStack = () => {
-    return (
-      <FinancesStack.Navigator initialRouteName="Finances">
-        <FinancesStack.Screen name="Finances" component={AccountsScreen}/>
-        <FinancesStack.Screen name="Add Account" component={AddAccountScreen}/>
-        <FinancesStack.Screen name="Transfer between accounts" component={TransferNavStack} options={{ headerShown: false }}/>
-        <FinancesStack.Screen name="Make a payment" component={PayNavStack} options={{ headerShown: false }}/>
-      </FinancesStack.Navigator>
-    );
+  const { signOut } = React.useContext(MyContext);
+  return (
+    <FinancesStack.Navigator initialRouteName="Finances">
+      <FinancesStack.Screen name="Finances" component={AccountsScreen} options={{
+        headerLeft: () => (
+          <Button title="Sign out" onPress={signOut} />
+        )
+      }}/>
+      <FinancesStack.Screen name="Add Account" component={AddAccountScreen}/>
+      <FinancesStack.Screen name="Transfer between accounts" component={TransferNavStack} options={{ headerShown: false }}/>
+      <FinancesStack.Screen name="Make a payment" component={PayNavStack} options={{ headerShown: false }}/>
+    </FinancesStack.Navigator>
+  );
 }
 
 // Impact Screens
 const ImpactNavStack = () => {
+  const { signOut } = React.useContext(MyContext);
   return (
-    <ImpactStack.Navigator initialRouteName="Goals">
-        <ImpactStack.Screen name="Impact" component={ImpactScreen}/>
+    <ImpactStack.Navigator initialRouteName="Impact">
+        <ImpactStack.Screen name="Impact" component={ImpactScreen} options={{
+          headerLeft: () => (
+            <Button title="Sign out" onPress={signOut} />
+          )
+        }}/>
     </ImpactStack.Navigator>
   );
 }
 
 // Goals Screens
 const GoalsNavStack = () => {
-    return (
-      <GoalsStack.Navigator initialRouteName="Impact">
-        <GoalsStack.Screen name="Goals" component={GoalsScreen}/>
-        <GoalsStack.Screen name="Add Category" component={AddCategoryScreen}/>
-      </GoalsStack.Navigator>
-    );
+  const { signOut } = React.useContext(MyContext);
+  return (
+    <GoalsStack.Navigator initialRouteName="Goals">
+      <GoalsStack.Screen name="Goals" component={GoalsScreen} options={{
+        headerLeft: () => (
+          <Button title="Sign out" onPress={signOut} />
+        )
+      }}/>
+      <GoalsStack.Screen name="Add Category" component={AddCategoryScreen}/>
+    </GoalsStack.Navigator>
+  );
 }
 
 // Tab navigator for all screens
-export const ScreensTabNavigator = () => {
+export function ScreensTabNavigator() {
   return (
     <Tab.Navigator tabBarOptions={{
         activeTintColor: GREEN_PARIS,
