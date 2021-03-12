@@ -9,6 +9,7 @@ export const WARNING = '#ffae00'
 export const ALERT = '#cc4b37'
 
 // grey
+export const GREY_EXTRA_LIGHT = '#f5f5f5'
 export const GREY_LIGHT = '#e6e6e6'
 export const GREY_MEDIUM = '#cacaca'
 export const GREY_DARK = '#8a8a8a'

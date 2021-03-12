@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, StyleSheet, FlatList, Text, View, TouchableOpacity, Image } from 'react-native';
+import { ActivityIndicator, StyleSheet, FlatList, Text, View, TouchableOpacity, Image, TextInput } from 'react-native';
 import { FONT_WEIGHT_BOLD, FONT_SIZE_HEADING, FONT_WEIGHT_REGULAR, FONT_SIZE_STANDARD, FONT_SIZE_SMALL } from 'resources/styles/typography';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getAsyncStorage } from 'src/util/StorageHelper';
@@ -101,7 +101,7 @@ function transfer(fromBankId, fromAccountId, toBankId, toAccountId, amount) {
     .then((token) => {
         getChallengeTypes(fromBankId, fromAccountId, token)
         .then((challengeTypes) => {
-          const challengeType = challengeTypes[0]
+          const challengeType = challengeTypes[0] // just gets first challenge type from available types
           initiateTransactionRequest(fromBankId, fromAccountId, toBankId, toAccountId, challengeType, token, amount)
           .then((initiateResponse) => {
             if(initiateResponse.code != null && initiateResponse.code == 400 || initiateResponse.code == 404) {

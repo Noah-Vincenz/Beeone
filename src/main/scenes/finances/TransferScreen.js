@@ -4,13 +4,27 @@ import { FONT_WEIGHT_BOLD, FONT_SIZE_HEADING, FONT_WEIGHT_REGULAR, FONT_SIZE_STA
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getAsyncStorage } from 'src/util/StorageHelper';
 import { base_url, joinPath, getChallengeTypes, initiateTransactionRequest, answerChallenge } from 'src/util/ObpApiUtils';
-import { GREY_LIGHT, GREY_MEDIUM, GREY_DARK, GREEN_PARIS, WHITE } from 'resources/styles/colours';
+import { GREY_LIGHT, GREY_MEDIUM, GREY_DARK, GREEN_PARIS, WHITE, GREEN_SACRAMENTO } from 'resources/styles/colours';
 import { StackActions } from '@react-navigation/native';
-import { getLogoSourcePath } from 'src/util/AccountUtils'
+import { getLogoSourcePath } from 'src/util/AccountUtils';
+import { RadioButton } from 'src/model/RadioButton.js';
 
 export function TransferScreen({ route, navigation }) {
     const { accountsList, fromAccount, toAccount } = route.params;
     const [amount, setAmount] = useState('0');
+    const [transferType, setTransferType] = useState([
+        { id: 1, value: true, name: "One Off Payment", selected: false },
+        { id: 2, value: false, name: "Standing Order", selected: false }
+    ]);
+
+    const onRadioBtnClick = (item) => {
+        let updatedState = transferType.map((transferTypeItem) =>
+        transferTypeItem.id === item.id
+            ? { ...transferTypeItem, selected: true }
+            : { ...transferTypeItem, selected: false }
+        );
+        setTransferType(updatedState);
+    };
 
     return (
         <View style={styles.container}>
@@ -77,6 +91,15 @@ export function TransferScreen({ route, navigation }) {
                 value={amount}
                 onChangeText={setAmount}
             />
+            {transferType.map((item) => (
+                <RadioButton
+                    onPress={() => onRadioBtnClick(item)}
+                    selected={item.selected}
+                    key={item.id}
+                >
+                {item.name}
+                </RadioButton>
+            ))}
             <TouchableOpacity style={styles.doneButton} onPress={() => {
                 if (toAccount != null) { 
                     transfer(fromAccount.bank_id, fromAccount.id, toAccount.bank_id, toAccount.id, amount);
@@ -98,7 +121,7 @@ function transfer(fromBankId, fromAccountId, toBankId, toAccountId, amount) {
     .then((token) => {
         getChallengeTypes(fromBankId, fromAccountId, token)
         .then((challengeTypes) => {
-          const challengeType = challengeTypes[0]
+          const challengeType = challengeTypes[0] // just gets first challenge type from available types
           initiateTransactionRequest(fromBankId, fromAccountId, toBankId, toAccountId, challengeType, token, amount)
           .then((initiateResponse) => {
             if(initiateResponse.code != null && initiateResponse.code == 400 || initiateResponse.code == 404) {
@@ -208,5 +231,5 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontWeight: FONT_WEIGHT_REGULAR,
         fontSize: FONT_SIZE_HEADING
-    },
+    }
 });
