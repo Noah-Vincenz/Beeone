@@ -1,31 +1,29 @@
-import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, TextInput } from 'react-native';
 import { FONT_WEIGHT_BOLD, FONT_SIZE_HEADING } from 'resources/styles/typography';
-import { WHITE, SECONDARY } from 'resources/styles/colours'
 import { StackActions } from '@react-navigation/native';
 import { MyContext } from '../util/Context';
 import { NavigationActions, CommonActions } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getAsyncStorage } from '../util/StorageHelper';
-import { ALERT, GREEN_KELLY, GREEN_MINT, GREEN_PARIS, GREY_LIGHT, GREY_MEDIUM } from '../resources/styles/colours';
+import { ALERT, GREEN_KELLY, GREEN_MINT, GREEN_PARIS, GREY_LIGHT, GREY_MEDIUM, WHITE } from 'resources/styles/colours';
 
 export function HomeScreen({ navigation }) {
+  const [message, setMessage] = useState('');
   const { signOut } = React.useContext(MyContext);
 
   return (
     <View style={styles.parentContainer}>
       <View style={styles.mainContainer}>
-        <TouchableOpacity style={styles.screenButton} onPress={() => navigation.navigate('News Feed')}>
-            <Text style={styles.buttonText}>My News Feed</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.screenButton} onPress={() => navigation.navigate('Banking')}>
-            <Text style={styles.buttonText}>My Banking</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.screenButton} onPress={() => navigation.navigate('Documents')}>
-            <Text style={styles.buttonText}>My Documents</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.screenButton} onPress={() => navigation.navigate('Marketplace')}>
-            <Text style={styles.buttonText}>My Marketplace</Text>
+        <View style={styles.postContainer}> 
+          <TextInput style={styles.textInput}
+            placeholder="What would you like to share?"
+            value={message}
+            onChangeText={setMessage}
+          />
+        </View>
+        <TouchableOpacity style={styles.addPhotoButton}>
+            <Text style={styles.buttonText}>Add a photo</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.signOutContainer}>
@@ -47,7 +45,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center'
   },
-  screenButton: {
+  postContainer:{
+    borderRadius: 5,
+    width: '95%',
+    backgroundColor: WHITE,
+    height: 50,
+    marginBottom: '2%',
+    justifyContent: "center",
+    padding: '2%'
+  },
+  addPhotoButton: {
       backgroundColor: GREEN_PARIS,
       marginVertical: '2%',
       height: '15%',

@@ -1,14 +1,14 @@
 import React, { useEffect, useState, useReducer } from 'react';
 import { ActivityIndicator, StyleSheet, FlatList, Text, View, TouchableOpacity } from 'react-native';
 import { FONT_WEIGHT_BOLD, FONT_SIZE_HEADING } from 'resources/styles/typography';
-import { WHITE, SECONDARY } from 'resources/styles/colours'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getAsyncStorage } from '../../util/StorageHelper';
 import { base_url, joinPath } from '../../util/ObpApiUtils';
-import { GREY_LIGHT } from '../../resources/styles/colours';
-import { addAccountReducer, initialState } from 'src/scenes/banking/reducers/AddAccountReducer.js';
+import { GREY_LIGHT, WHITE, SECONDARY } from 'resources/styles/colours';
+import { addAccountReducer, initialState } from 'src/scenes/finances/reducers/AddAccountReducer.js';
 
 export function AddAccountScreen({ navigation }) {
+
   const [state, dispatch] = useReducer(addAccountReducer, initialState);
 
   useEffect(() => {
@@ -23,7 +23,6 @@ export function AddAccountScreen({ navigation }) {
       .then((response) => response.json())
       .then((json) => dispatch({ type: 'LOAD_BANKS', banks: json.banks }))
       .catch((error) => console.error(error))
-      // .finally(() => { setLoading(false) });
     })
   }, []);
   return (

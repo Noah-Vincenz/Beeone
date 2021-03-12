@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, StyleSheet, FlatList, Text, View, TouchableOpacity, TouchableHighlight, Image, TextInput, Button } from 'react-native';
 import { FONT_WEIGHT_BOLD, FONT_SIZE_HEADING, FONT_WEIGHT_REGULAR, FONT_SIZE_STANDARD, FONT_SIZE_SMALL } from 'resources/styles/typography';
-import { WHITE, SECONDARY } from 'resources/styles/colours'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getAsyncStorage } from '../../util/StorageHelper';
-import { base_url, joinPath, getChallengeTypes, initiateTransactionRequest, answerChallenge, getCounterParties } from '../../util/ObpApiUtils';
+import { base_url, joinPath, getChallengeTypes, initiateTransactionRequest, answerChallenge, getCounterParties } from 'src/util/ObpApiUtils';
 import { GREY_LIGHT, GREY_MEDIUM, GREY_DARK } from 'resources/styles/colours';
 import { StackActions, useNavigation } from '@react-navigation/native';
 import { getLogoSourcePath } from 'src/util/AccountUtils';
-import { BLACK, GREEN_FOREST, GREEN_KELLY, GREEN_MINT, GREEN_PARIS, GREEN_SACRAMENTO } from '../../resources/styles/colours';
+import { BLACK, GREEN_FOREST, GREEN_KELLY, GREEN_MINT, GREEN_PARIS, GREEN_SACRAMENTO, WHITE } from 'resources/styles/colours';
 import DropDownPicker from 'react-native-dropdown-picker';
 
 export function PaySomeoneNewScreen({ route }) {

@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, StyleSheet, FlatList, Text, View, TouchableOpacity } from 'react-native';
 import { FONT_WEIGHT_BOLD, FONT_SIZE_HEADING } from 'resources/styles/typography';
-import { WHITE, SECONDARY } from 'resources/styles/colours'
+import { WHITE, SECONDARY, GREY_LIGHT } from 'resources/styles/colours'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getAsyncStorage } from '../../util/StorageHelper';
 import { base_url, joinPath } from '../../util/ObpApiUtils';
-import { GREY_LIGHT } from '../../resources/styles/colours';
 
 export function AddCategoryScreen({ navigation }) {
   const [isLoading, setLoading] = useState(true);

@@ -4,7 +4,7 @@ import { FONT_WEIGHT_BOLD, FONT_SIZE_HEADING } from 'resources/styles/typography
 import { WHITE, SECONDARY } from 'resources/styles/colours'
 import { MyContext } from '../util/Context';
 import { GREEN_MINT, GREEN_KELLY, GREEN_SACRAMENTO, GREEN_PARIS, GREY_DARK, GREY_LIGHT, GREY_MEDIUM, BLUE_MEDIUM, BLUE_DARK, GREEN_FOREST } from '../resources/styles/colours';
-import { FONT_SIZE_STANDARD, FONT_SIZE_LOGO, FONT_SIZE_SMALL, FONT_WEIGHT_REGULAR } from '../resources/styles/typography';
+import { FONT_SIZE_STANDARD, FONT_SIZE_LOGO, FONT_SIZE_SMALL, FONT_WEIGHT_REGULAR } from 'resources/styles/typography';
 
 export function SignInScreen({ navigation }) {
     const [username, setUsername] = React.useState('');

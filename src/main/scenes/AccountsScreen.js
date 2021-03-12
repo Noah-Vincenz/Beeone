@@ -8,12 +8,11 @@ import { base_url, joinPath, getAccount, getBankIdsAndAccountIdsAndAccountTypes 
 import { BLACK, GREEN_FOREST, GREEN_MINT, GREEN_PARIS, GREY_DARK, GREY_LIGHT, GREY_MEDIUM } from 'resources/styles/colours';
 import { FONT_SIZE_SMALL, FONT_SIZE_STANDARD, FONT_WEIGHT_REGULAR } from 'resources/styles/typography';
 import { getLogoSourcePath } from 'src/util/AccountUtils';
-import { accountsReducer, initialState } from 'src/scenes/banking/reducers/AccountsReducer.js';
+import { accountsReducer, initialState } from 'src/scenes/finances/reducers/AccountsReducer.js';
 
 export function AccountsScreen({ navigation }) {
   const [state, dispatch] = useReducer(accountsReducer, initialState);
   const [isAddButtonVisible, setAddButtonVisible] = useState(true);
-
   const handleScroll = (nativeEvent) => {
     if (isCloseToBottom(nativeEvent)) {
       setAddButtonVisible(false);

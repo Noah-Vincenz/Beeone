@@ -1,8 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { FONT_WEIGHT_BOLD, FONT_SIZE_HEADING, FONT_WEIGHT_REGULAR } from 'resources/styles/typography';
-import { WHITE, SECONDARY, GREEN_PARIS } from 'resources/styles/colours'
-import { GREY_LIGHT } from '../../resources/styles/colours';
+import { WHITE, SECONDARY, GREEN_PARIS, GREY_LIGHT } from 'resources/styles/colours'
 
 export function GoalsScreen({ navigation }) {
   return (

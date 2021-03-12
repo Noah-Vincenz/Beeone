@@ -1,15 +1,14 @@
 import React, { useEffect, useState, useReducer } from 'react';
 import { ActivityIndicator, StyleSheet, FlatList, Text, View, TouchableOpacity, Image, Button } from 'react-native';
 import { FONT_WEIGHT_BOLD, FONT_SIZE_HEADING, FONT_WEIGHT_REGULAR, FONT_SIZE_STANDARD, FONT_SIZE_SMALL } from 'resources/styles/typography';
-import { WHITE, SECONDARY } from 'resources/styles/colours'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getAsyncStorage } from '../../util/StorageHelper';
 import { base_url, joinPath, getChallengeTypes, initiateTransactionRequest, answerChallenge, getCounterParties } from '../../util/ObpApiUtils';
-import { GREY_LIGHT, GREY_MEDIUM, GREY_DARK } from 'resources/styles/colours';
+import { GREY_LIGHT, GREY_MEDIUM, GREY_DARK, WHITE } from 'resources/styles/colours';
 import { StackActions } from '@react-navigation/native';
 import { getLogoSourcePath } from 'src/util/AccountUtils';
 import { Icon } from 'react-native-elements';
-import { selectRecipientReducer, initialState } from 'src/scenes/banking/reducers/SelectRecipientReducer.js';
+import { selectRecipientReducer, initialState } from 'src/scenes/finances/reducers/SelectRecipientReducer.js';
 
 export function SelectRecipientScreen({ route, navigation }) {
     const { fromAccount } = route.params;
