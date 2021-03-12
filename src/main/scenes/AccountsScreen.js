@@ -46,7 +46,6 @@ export function AccountsScreen({ navigation }) {
   useEffect(() => {
     // Subscribe for the focus listener to refresh the array of accounts whenever the screen is loaded
     const unsubscribe = navigation.addListener('focus', () => {
-      console.log('Refreshed the accounts screen.');
       retrieveAccounts()
     });
     return unsubscribe;

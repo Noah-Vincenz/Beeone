@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, TextInput } from 'react-native';
-import { FONT_WEIGHT_BOLD, FONT_SIZE_HEADING } from 'resources/styles/typography';
-import { GREEN_PARIS, GREY_LIGHT, WHITE } from 'resources/styles/colours';
+import { StyleSheet, Text, View, TouchableOpacity, TextInput, Image } from 'react-native';
+import { FONT_WEIGHT_BOLD, FONT_SIZE_HEADING, FONT_WEIGHT_REGULAR, FONT_SIZE_STANDARD } from 'resources/styles/typography';
+import { GREEN_PARIS, GREY_LIGHT, BLACK, WHITE, GREY_DARK, GREY_MEDIUM } from 'resources/styles/colours';
 
 export function HomeScreen({ navigation }) {
   const [message, setMessage] = useState('');
@@ -15,10 +15,14 @@ export function HomeScreen({ navigation }) {
             value={message}
             onChangeText={setMessage}
           />
-        </View>
-        <TouchableOpacity style={styles.addPhotoButton}>
+          <TouchableOpacity style={styles.addPhotoButton}>
+            <Image
+                source={require('resources/img/camera-icon.png')}
+                style={styles.addPhotoButtonImg}
+            />
             <Text style={styles.buttonText}>Add a photo</Text>
-        </TouchableOpacity>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
@@ -32,28 +36,45 @@ const styles = StyleSheet.create({
   mainContainer:{
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center'
   },
   postContainer:{
     borderRadius: 5,
     width: '95%',
     backgroundColor: WHITE,
-    height: 50,
-    marginBottom: '2%',
-    justifyContent: "center",
+    height: '25%',
+    marginVertical: '2%',
+    alignItems: 'center',
     padding: '2%'
   },
+  textInput: {
+    width: '100%',
+    fontWeight: FONT_WEIGHT_REGULAR,
+    fontSize: FONT_SIZE_STANDARD,
+    color: GREY_DARK,
+  },
   addPhotoButton: {
-      backgroundColor: GREEN_PARIS,
-      marginVertical: '2%',
-      height: '15%',
-      width: '100%',
-      justifyContent: 'center',
+    backgroundColor: GREY_MEDIUM,
+    width: '100%',
+    marginVertical: '2%',
+    position:'absolute',
+    bottom: 0,
+    paddingHorizontal: '10%',
+    flex: 1,
+    resizeMode: 'contain',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  addPhotoButtonImg: {
+    position:'absolute',
+    left: 0,
+    width: 60,
+    height: 60,
   },
   buttonText: {
       textAlign: 'center',
-      color: WHITE,
+      color: BLACK,
       fontWeight: FONT_WEIGHT_BOLD,
       fontSize: FONT_SIZE_HEADING
-  }
+  },
 });
