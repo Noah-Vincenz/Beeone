@@ -8,7 +8,9 @@ import { GREY_LIGHT, GREY_MEDIUM, GREY_DARK, GREEN_PARIS, WHITE, GREEN_SACRAMENT
 import { StackActions } from '@react-navigation/native';
 import { getLogoSourcePath } from 'src/util/AccountUtils';
 import { RadioButton } from 'src/model/RadioButton.js';
+import Picker from '@gregfrench/react-native-wheel-picker'
 
+var PickerItem = Picker.Item;
 export function TransferScreen({ route, navigation }) {
     const { accountsList, fromAccount, toAccount } = route.params;
     const [amount, setAmount] = useState('');
@@ -17,7 +19,9 @@ export function TransferScreen({ route, navigation }) {
         { id: 1, name: "One Off Payment", selected: false },
         { id: 2, name: "Standing Order", selected: false }
     ]);
-
+    const [selectedFrequency, setSelectedFrequency ] = useState(2);
+    const [frequencyList , setFrequencyList ] = useState(['Daily', 'Weekly', 'Monthly', 'Yearly']);
+  
     const onRadioBtnClick = (item) => {
         let updatedState = selectedItem.map((it) =>
         it.id === item.id
@@ -102,6 +106,23 @@ export function TransferScreen({ route, navigation }) {
                 {item.name}
                 </RadioButton>
             ))}
+            {transferType == 'Standing Order' ? (
+                <Text>
+                    <Picker style={{width: 150, height: 180}}
+                    lineColor="#000000" //to set top and bottom line color (Without gradients)
+                    lineGradientColorFrom="#008000" //to set top and bottom starting gradient line color
+                    lineGradientColorTo="#FF5733" //to set top and bottom ending gradient
+                    selectedValue={selectedItem}
+                    itemStyle={{color:"black", fontSize:26}}
+                    onValueChange={(index) => setSelectedFrequency(index) }>
+                    {frequencyList.map((value, i) => (
+                        <PickerItem label={value} value={i} key={i}/>
+                    ))}
+                    </Picker>
+                </Text>
+            ) : (
+                <Text></Text>
+            )}
             <TouchableOpacity style={styles.doneButton} onPress={() => {
                 if (toAccount != null) { 
                     transfer(fromAccount.bank_id, fromAccount.id, toAccount.bank_id, toAccount.id, amount);
