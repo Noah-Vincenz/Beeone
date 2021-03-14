@@ -6,12 +6,28 @@ import { getAsyncStorage } from 'src/util/StorageHelper';
 import { base_url, joinPath, getChallengeTypes, initiateTransactionRequest, answerChallenge } from 'src/util/ObpApiUtils';
 import { GREY_LIGHT, GREY_MEDIUM, GREY_DARK, GREEN_PARIS, WHITE } from 'resources/styles/colours';
 import { StackActions } from '@react-navigation/native';
-import { getLogoSourcePath } from 'src/util/AccountUtils'
+import { getLogoSourcePath } from 'src/util/AccountUtils';
+import { RadioButton } from 'src/model/RadioButton.js';
 
 export function PayScreen({ route, navigation }) {
     const { fromAccount, toAccount } = route.params;
-    const [amount, setAmount] = useState('0');
+    const [amount, setAmount] = useState('');
     const [reference, setReference] = useState('');
+    const [transferType, setTransferType] = useState('');
+    const [selectedItem, setSelectedItem] = useState([
+        { id: 1, name: "One Off Payment", selected: false },
+        { id: 2, name: "Standing Order", selected: false }
+    ]);
+
+    const onRadioBtnClick = (item) => {
+        let updatedState = selectedItem.map((it) =>
+        it.id === item.id
+            ? { ...it, selected: true }
+            : { ...it, selected: false }
+        );
+        setSelectedItem(updatedState);
+        setTransferType(item.name);
+    };
 
     return (
         <View style={styles.container}>
@@ -73,7 +89,7 @@ export function PayScreen({ route, navigation }) {
             <Text style={styles.amountText}>Amount:</Text>
             <TextInput style={styles.textInput}
                 keyboardType = 'numeric'
-                defaultValue = '0'
+                placeholder = '0'
                 value={amount}
                 onChangeText={setAmount}
             />
@@ -82,8 +98,15 @@ export function PayScreen({ route, navigation }) {
                 value={reference}
                 onChangeText={setReference}
             />
-            <Text>One off</Text>
-            <Text>Standing Order</Text>
+            {selectedItem.map((item) => (
+                <RadioButton
+                    onPress={() => onRadioBtnClick(item)}
+                    selected={item.selected}
+                    key={item.id}
+                >
+                {item.name}
+                </RadioButton>
+            ))}
             <TouchableOpacity style={styles.doneButton} onPress={() => {
                 if (toAccount != null) { 
                     transfer(fromAccount.bank_id, fromAccount.id, toAccount.bank_id, toAccount.id, amount);

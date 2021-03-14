@@ -11,19 +11,21 @@ import { RadioButton } from 'src/model/RadioButton.js';
 
 export function TransferScreen({ route, navigation }) {
     const { accountsList, fromAccount, toAccount } = route.params;
-    const [amount, setAmount] = useState('0');
-    const [transferType, setTransferType] = useState([
-        { id: 1, value: true, name: "One Off Payment", selected: false },
-        { id: 2, value: false, name: "Standing Order", selected: false }
+    const [amount, setAmount] = useState('');
+    const [transferType, setTransferType] = useState('');
+    const [selectedItem, setSelectedItem] = useState([
+        { id: 1, name: "One Off Payment", selected: false },
+        { id: 2, name: "Standing Order", selected: false }
     ]);
 
     const onRadioBtnClick = (item) => {
-        let updatedState = transferType.map((transferTypeItem) =>
-        transferTypeItem.id === item.id
-            ? { ...transferTypeItem, selected: true }
-            : { ...transferTypeItem, selected: false }
+        let updatedState = selectedItem.map((it) =>
+        it.id === item.id
+            ? { ...it, selected: true }
+            : { ...it, selected: false }
         );
-        setTransferType(updatedState);
+        setSelectedItem(updatedState);
+        setTransferType(item.name);
     };
 
     return (
@@ -87,11 +89,11 @@ export function TransferScreen({ route, navigation }) {
             <Text style={styles.amountText}>Amount:</Text>
             <TextInput style={styles.textInput}
                 keyboardType = 'numeric'
-                defaultValue = '0'
+                placeholder = '0'
                 value={amount}
                 onChangeText={setAmount}
             />
-            {transferType.map((item) => (
+            {selectedItem.map((item) => (
                 <RadioButton
                     onPress={() => onRadioBtnClick(item)}
                     selected={item.selected}
