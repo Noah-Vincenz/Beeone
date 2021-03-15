@@ -166,18 +166,16 @@ export function TransferScreen({ route, navigation }) {
                         </View>
                     )}
                 </View>
-                    <TouchableOpacity style={amount > 0 && toAccount != undefined ? styles.doneButtonEnabled : styles.doneButtonDisabled} disabled={amount == 0 || toAccount == undefined} onPress={() => {
-                        if (toAccount != null) { 
-                            transfer(fromAccount.bank_id, fromAccount.id, toAccount.bank_id, toAccount.id, amount);
-                            // apply timeout to show updated account balances - unless transfer is taking longer than expected
-                            // we could add another API call here to check for the status of the transaction request
-                            setTimeout(navigation.goBack,
-                                250
-                            );
-                        }
-                    }}>
-                        <Text style={styles.doneButtonText}>Done</Text>
-                    </TouchableOpacity>
+                <TouchableOpacity style={amount > 0 && toAccount != undefined ? styles.doneButtonEnabled : styles.doneButtonDisabled} disabled={amount == 0 || toAccount == undefined} onPress={() => {
+                    transfer(fromAccount.bank_id, fromAccount.id, toAccount.bank_id, toAccount.id, amount);
+                    // apply timeout to show updated account balances - unless transfer is taking longer than expected
+                    // we could add another API call here to check for the status of the transaction request
+                    setTimeout(navigation.goBack,
+                        250
+                    );
+                }}>
+                    <Text style={styles.doneButtonText}>Done</Text>
+                </TouchableOpacity>
             </ScrollView>
         </View>
     );
