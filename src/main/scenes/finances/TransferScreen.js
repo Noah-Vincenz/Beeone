@@ -24,7 +24,7 @@ export function TransferScreen({ route, navigation }) {
     ]);
     const [frequency, setFrequency ] = useState(0); // default is 'Daily'
     const [frequencyList , setFrequencyList ] = useState([
-        'Daily', 'Weekly', 'Monthly', 'Yearly'
+        'Daily', 'Bi-Weekly', 'Weekly', 'Monthly', 'Yearly'
     ]);
     const [date, setDate] = useState(new Date());
     const [showDatePicker, setShowDatePicker] = useState(false);
