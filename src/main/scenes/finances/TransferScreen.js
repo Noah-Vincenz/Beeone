@@ -166,8 +166,7 @@ export function TransferScreen({ route, navigation }) {
                         </View>
                     )}
                 </View>
-                {amount > 0 && toAccount != undefined ? (
-                    <TouchableOpacity style={styles.doneButtonEnabled} onPress={() => {
+                    <TouchableOpacity style={amount > 0 && toAccount != undefined ? styles.doneButtonEnabled : styles.doneButtonDisabled} disabled={amount == 0 || toAccount == undefined} onPress={() => {
                         if (toAccount != null) { 
                             transfer(fromAccount.bank_id, fromAccount.id, toAccount.bank_id, toAccount.id, amount);
                             // apply timeout to show updated account balances - unless transfer is taking longer than expected
@@ -179,11 +178,6 @@ export function TransferScreen({ route, navigation }) {
                     }}>
                         <Text style={styles.doneButtonText}>Done</Text>
                     </TouchableOpacity>
-                ) : (
-                    <TouchableOpacity style={styles.doneButtonDisabled} disabled={true}>
-                        <Text style={styles.doneButtonText}>Done</Text>
-                    </TouchableOpacity>
-                )}
             </ScrollView>
         </View>
     );
