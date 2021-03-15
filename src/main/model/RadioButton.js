@@ -20,7 +20,7 @@ export const RadioButton = ({ onPress, selected, children }) => {
 const styles = StyleSheet.create({
     radioButtonContainer: {
         backgroundColor: WHITE,
-        width: '97%',
+        width: '100%',
         flexDirection: 'row',
         alignItems: 'center',
         padding: '1%'
