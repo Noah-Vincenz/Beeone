@@ -9,8 +9,9 @@ import { StackActions, useNavigation } from '@react-navigation/native';
 import { getLogoSourcePath } from 'src/util/AccountUtils';
 import { BLACK, GREEN_FOREST, GREEN_KELLY, GREEN_MINT, GREEN_PARIS, GREEN_SACRAMENTO, WHITE } from 'resources/styles/colours';
 import DropDownPicker from 'react-native-dropdown-picker';
+import { createCounterParty } from '../../util/ObpApiUtils';
 
-export function PaySomeoneNewScreen({ route }) {
+export function PaySomeoneNewScreen({ route, navigation }) {
     const { fromAccount } = route.params;
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
@@ -18,11 +19,26 @@ export function PaySomeoneNewScreen({ route }) {
     const [routingScheme, setRoutingScheme] = useState('IBAN');
     const [routingAddress, setRoutingAddress] = useState('');
 
-    /**
-     * TODO: 
-     * make request to /obp/v4.0.0/banks/BANK_ID/accounts/ACCOUNT_ID/VIEW_ID/counterparties
-     * with body {  "name":"CounterpartyName",  "description":"My landlord",  "currency":"EUR",  "other_account_routing_scheme":"OBP",  "other_account_routing_address":"36f8a9e6-c2b1-407a-8bd0-421b7119307e",  "other_account_secondary_routing_scheme":"IBAN",  "other_account_secondary_routing_address":"DE89370400440532013000",  "other_bank_routing_scheme":"OBP",  "other_bank_routing_address":"gh.29.uk",  "other_branch_routing_scheme":"OBP",  "other_branch_routing_address":"12f8a9e6-c2b1-407a-8bd0-421b7119307e",  "is_beneficiary":true,  "bespoke":[{    "key":"englishName",    "value":"english Name"  }]}
-     */
+    const onCreateButtonPressed = () => {
+        getAsyncStorage('obpToken')
+        .then((token) => {
+            /*
+            the below ensures that the call is made with an existing OBP account
+            using this account:
+            "email":"ellie.uk.29@example.com", "password":"a81594", "user_name":"ellie.uk.29@example.com", "bankid:"gh.29.uk",
+            "routingScheme": "IBAN", "routingAddress":"UK12 1234 5123 4510 2207 8077 877",
+            "accountid": "26fa77a2-028f-4022-b47d-26caa8db359a", "currency": "GBP", "amount": "31684.81" 
+            */
+            createCounterParty(fromAccount.bank_id, fromAccount.id, 'Ellie Morgan', 'Landlord - Rent', 'GBP', 'IBAN', 'UK12 1234 5123 4510 2207 8077 877', token);
+            // createCounterParty(fromAccount.bank_id, fromAccount.id, name, description, currency, routingScheme, routingAddress, token);
+            // apply timeout to show updated account balances - unless transfer is taking longer than expected
+            // we could add another API call here to check for the status of the transaction request
+            setTimeout(navigation.goBack,
+                250
+            );
+        })
+    }
+
     return (
         <View style={styles.container}>
             <View style={styles.textInputView}>
@@ -81,6 +97,13 @@ export function PaySomeoneNewScreen({ route }) {
                     onChangeText={setRoutingAddress}
                 />
             </View>
+            <TouchableOpacity 
+                style={name != undefined && description != undefined && routingScheme != undefined && routingAddress != undefined ? styles.createButtonEnabled
+                    : styles.createButtonDisabled} 
+                disabled={name == undefined || description == undefined || routingScheme == undefined || routingAddress == undefined} 
+                onPress={onCreateButtonPressed}>
+                <Text style={styles.createButtonText}>Create</Text>
+            </TouchableOpacity>
         </View>
     );
 };
@@ -161,5 +184,27 @@ const styles = StyleSheet.create({
         fontWeight: FONT_WEIGHT_REGULAR,
         fontSize: FONT_SIZE_SMALL,
         color: WHITE
+    },
+    createButtonEnabled: {
+        alignSelf: 'center',
+        width: '85%',
+        padding: '1.5%',
+        backgroundColor: GREEN_PARIS,
+        borderRadius: 20,
+        marginVertical: '1%'
+    },
+    createButtonDisabled: {
+        alignSelf: 'center',
+        width: '85%',
+        padding: '1.5%',
+        backgroundColor: GREY_MEDIUM,
+        borderRadius: 20,
+        marginVertical: '1%'
+    },
+    createButtonText: {
+        color: WHITE,
+        textAlign: 'center',
+        fontWeight: FONT_WEIGHT_REGULAR,
+        fontSize: FONT_SIZE_HEADING
     }
 });

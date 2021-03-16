@@ -74,7 +74,7 @@ export const getCounterParties = async (bankId, accountId, token) => {
             }
         });
         let json = await response.json();
-        return json;
+        return json.counterparties;
     } catch (error) {
         console.error(error);
     }
@@ -147,3 +147,39 @@ export const initiateTransactionRequest = async (senderBankId, senderAccountId, 
         console.error(error);
     }
 }  
+
+export const createCounterParty = async (senderBankId, senderAccountId, counterpartyName, counterpartyDescription, counterpartyCurrency, counterpartyRoutingScheme, counterpartyRoutingAddress, token) => {
+    /**
+     * TODO: 
+     * make request to /obp/v4.0.0/banks/BANK_ID/accounts/ACCOUNT_ID/VIEW_ID/counterparties
+     * with body {  "name":"CounterpartyName",  "description":"My landlord",  "currency":"EUR",  "other_account_routing_scheme":"OBP",  "other_account_routing_address":"36f8a9e6-c2b1-407a-8bd0-421b7119307e",  "other_account_secondary_routing_scheme":"IBAN",  "other_account_secondary_routing_address":"DE89370400440532013000",  "other_bank_routing_scheme":"OBP",  "other_bank_routing_address":"gh.29.uk",  "other_branch_routing_scheme":"OBP",  "other_branch_routing_address":"12f8a9e6-c2b1-407a-8bd0-421b7119307e",  "is_beneficiary":true,  "bespoke":[{    "key":"englishName",    "value":"english Name"  }]}
+     */
+    console.log(`creating counterparty with name: ${counterpartyName}`);
+    try {
+        let response = await fetch(joinPath(base_url, `/obp/v4.0.0/banks/${senderBankId}/accounts/${senderAccountId}/owner/counterparties`), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `DirectLogin token="${token}"`
+            },
+            body: JSON.stringify({
+                name: counterpartyName,
+                description: counterpartyDescription,
+                currency: counterpartyCurrency,
+                other_account_routing_scheme: counterpartyRoutingScheme,
+                other_account_routing_address: counterpartyRoutingAddress,
+                other_account_secondary_routing_scheme: '',
+                other_account_secondary_routing_address: '',
+                other_bank_routing_scheme: 'OBP',
+                other_bank_routing_address: '',
+                other_branch_routing_scheme: 'OBP',
+                other_branch_routing_address: '',
+                is_beneficiary: true,
+            })
+        });
+        let json = await response.json();
+        return json
+    } catch(error) {
+        console.error(error);
+    }
+}
