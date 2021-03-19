@@ -13,7 +13,7 @@ export function AddAccountScreen({ navigation }) {
   const [masterBanks, setMasterBanks] = useState([]);
   const [filteredBanks, setFilteredBanks] = useState([]);
   const [search, setSearch] = useState('');
-  const numColumns = 2;
+  const columns = 2;
 
   useEffect(() => {
     getAsyncStorage('obpToken')
@@ -52,6 +52,33 @@ export function AddAccountScreen({ navigation }) {
     }
   };
 
+  const formatData = (data) => { // to ensure the last row is not stretched, but consists of a single item starting from left
+    const fullRows = Math.floor(data.length / columns);
+    let lastRowNumberOfElems = data.length - (fullRows * columns);
+    while (lastRowNumberOfElems !== columns && lastRowNumberOfElems !== 0) {
+      data.push({key: `blank-${lastRowNumberOfElems}`, empty: true});
+      lastRowNumberOfElems++;
+    }
+    return data;
+  }
+
+  const renderItem = ({ item, index }) => {
+    if (item.empty) {
+      return <View style={[styles.accountContainer, styles.accountContainerInvisible]}/>;
+    }
+    return (
+      <View style={styles.accountContainer}>
+        <Image
+          style={styles.bankLogo}
+          source={getLogoSourcePath(item.id)}
+        />
+        <View style={styles.bankIdContainer}>
+          <Text style={styles.accountContainerText}>{getRealBankName(item.id)}</Text>
+        </View>
+      </View>
+    );
+  };
+
   return (
     <View style={styles.container}>
         <TextInput
@@ -62,21 +89,11 @@ export function AddAccountScreen({ navigation }) {
         />
         {isLoading ? <ActivityIndicator/> : (
             <FlatList 
-            style={styles.accountsContainer}
-            numColumns={numColumns}
-            data={filteredBanks} // we only want to display the first 6 banks; the others can be searched
-            keyExtractor={(item, index) => `list-item-${index}`}
-            renderItem={({item}) => 
-              <View style={styles.accountContainer}>
-                <Image
-                style={styles.bankLogo}
-                source={getLogoSourcePath(item.id)}
-                />
-                <View style={styles.bankIdContainer}>
-                  <Text style={styles.accountContainerText}>{getRealBankName(item.id)}</Text>
-                </View>
-              </View>
-            }/>
+              style={styles.accountsContainer}
+              numColumns={columns}
+              data={formatData(filteredBanks)} // we only want to display the first 6 banks; the others can be searched
+              renderItem={renderItem}
+            />
         )}
     </View>
   );
@@ -111,6 +128,9 @@ const styles = StyleSheet.create({
       margin: '1.5%',
       justifyContent: 'center',
       paddingTop: '5%'
+    },
+    accountContainerInvisible: {
+      backgroundColor: 'transparent',
     },
     bankLogo: {
       flex: 2,
