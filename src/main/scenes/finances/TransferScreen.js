@@ -167,7 +167,7 @@ export function TransferScreen({ route, navigation }) {
                     )}
                 </View>
                 <TouchableOpacity style={amount > 0 && toAccount != undefined ? styles.doneButtonEnabled : styles.doneButtonDisabled} disabled={amount == 0 || toAccount == undefined} onPress={() => {
-                    transfer(fromAccount.bank_id, fromAccount.id, toAccount.bank_id, toAccount.id, amount);
+                    transfer(fromAccount.bank_id, fromAccount.id, toAccount.bank_id, toAccount.id, amount)
                     // apply timeout to show updated account balances - unless transfer is taking longer than expected
                     // we could add another API call here to check for the status of the transaction request
                     setTimeout(navigation.goBack,
@@ -181,35 +181,35 @@ export function TransferScreen({ route, navigation }) {
     );
 };
 
-function transfer(fromBankId, fromAccountId, toBankId, toAccountId, amount) {
+function transfer (fromBankId, fromAccountId, toBankId, toAccountId, amount) {
     getAsyncStorage('obpToken')
     .then((token) => {
         getChallengeTypes(fromBankId, fromAccountId, token)
         .then((challengeTypes) => {
-          const challengeType = challengeTypes[0] // just gets first challenge type from available types
-          initiateTransactionRequest(fromBankId, fromAccountId, toBankId, toAccountId, challengeType, token, amount)
-          .then((initiateResponse) => {
-            if(initiateResponse.code != null && initiateResponse.code == 400 || initiateResponse.code == 404) {
-              console.error(initiateResponse)
-            }
-            else if (initiateResponse.challenges != null) {
-                // answer the challenge
-                const challengeQuery = initiateResponse.challenges[0].id
-                const transactionReqId = initiateResponse.id
-    
-                const challengeResponse = answerChallenge(fromBankId, fromAccountId, transactionReqId, challengeQuery) 
-                if("error" in challengeResponse) {
-                    console.error(challengeResponse)
+            const challengeType = challengeTypes[0] // just gets first challenge type from available types
+            initiateTransactionRequest(fromBankId, fromAccountId, toBankId, toAccountId, challengeType, token, amount)
+            .then((initiateResponse) => {
+                if(initiateResponse.code != null && initiateResponse.code == 400 || initiateResponse.code == 404) {
+                console.error(initiateResponse)
                 }
-                console.log(`Transaction status: ${challengeResponse.status}`);
-                console.log(`Transaction created: ${challengeResponse.transaction_ids}`);
-            }
-            else {
-                // There was no challenge, transaction was created immediately
-                console.log("Transaction was successfully created:")
-                console.log(initiateResponse)
-            }
-          });
+                else if (initiateResponse.challenges != null) {
+                    // answer the challenge
+                    const challengeQuery = initiateResponse.challenges[0].id
+                    const transactionReqId = initiateResponse.id
+        
+                    const challengeResponse = answerChallenge(fromBankId, fromAccountId, transactionReqId, challengeQuery) 
+                    if("error" in challengeResponse) {
+                        console.error(challengeResponse)
+                    }
+                    console.log(`Transaction status: ${challengeResponse.status}`);
+                    console.log(`Transaction created: ${challengeResponse.transaction_ids}`);
+                }
+                else {
+                    // There was no challenge, transaction was created immediately
+                    console.log("Transaction was successfully created:")
+                    console.log(initiateResponse)
+                }
+            });
         });
     })
     .catch((error) => console.error(error));

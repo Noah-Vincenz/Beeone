@@ -25,13 +25,12 @@ export function PaySomeoneNewScreen({ route, navigation }) {
             /*
             the below ensures that the call is made with an existing OBP account
             using this account:
-            "email":"ellie.uk.29@example.com", "password":"a81594", "user_name":"ellie.uk.29@example.com", "bankid:"gh.29.uk",
-            "routingScheme": "IBAN", "routingAddress":"UK12 1234 5123 4510 2207 8077 877",
-            "accountid": "26fa77a2-028f-4022-b47d-26caa8db359a", "currency": "GBP", "amount": "31684.81" 
+            "email":"rob.us.29@example.com", "password":"a50eda", "bankid:"gh.29.us",
+            "routingScheme": "IBAN", "routingAddress":"US12 1234 5123 4516 7274 2013 377",
+            "accountid": "73a12430-136b-485d-934d-e51b0aa68de0", "currency": "USD", "amount": "7531.54" 
             */
-            createCounterParty(fromAccount.bank_id, fromAccount.id, 'Ellie Morgan', 'Landlord - Rent', 'GBP', 'IBAN', 'UK12 1234 5123 4510 2207 8077 877', token);
-            // createCounterParty(fromAccount.bank_id, fromAccount.id, name, description, currency, routingScheme, routingAddress, token);
-            // apply timeout to show updated account balances - unless transfer is taking longer than expected
+            createCounterParty(fromAccount.bank_id, fromAccount.id, name, description, 'USD', 'IBAN', 'US12 1234 5123 4516 7274 2013 377', 'gh.29.us', token)
+            // apply timeout to show updated account balances - unless transaction is taking longer than expected
             // we could add another API call here to check for the status of the transaction request
             setTimeout(navigation.goBack,
                 250

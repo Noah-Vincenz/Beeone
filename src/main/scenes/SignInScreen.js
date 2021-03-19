@@ -35,10 +35,10 @@ export function SignInScreen({ navigation }) {
         </TouchableOpacity>
         {/* to be changed for PROD*/}
         {/* <TouchableOpacity style={styles.buttonStyles} onPress={() => signIn({ username, password })}> */}
-        <TouchableOpacity style={styles.signInButton} onPress={() => signIn({ username: "nathan.fr.29@example.com", password: "bde179" })}>
+        <TouchableOpacity style={styles.signInButton} onPress={() => signIn({ username: "alf.us.29@example.com", password: "9122a1" })}>
           <Text style={styles.buttonText}>Sign in</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.signUpButton} onPress={() => signIn({ username: "nathan.fr.29@example.com", password: "bde179" })}>
+        <TouchableOpacity style={styles.signUpButton} onPress={() => signIn({ username: "alf.us.29@example.com", password: "9122a1" })}>
           <Text style={styles.signUpButtonText}>Sign up</Text>
         </TouchableOpacity>
       </View>

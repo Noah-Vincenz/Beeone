@@ -3,7 +3,7 @@ import { ActivityIndicator, StyleSheet, FlatList, Text, View, TouchableOpacity, 
 import { FONT_WEIGHT_BOLD, FONT_SIZE_HEADING, FONT_WEIGHT_REGULAR, FONT_SIZE_STANDARD, FONT_SIZE_SMALL } from 'resources/styles/typography';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getAsyncStorage } from '../../util/StorageHelper';
-import { base_url, joinPath, getChallengeTypes, initiateTransactionRequest, answerChallenge, getCounterParties } from '../../util/ObpApiUtils';
+import { base_url, joinPath, getChallengeTypes, initiateTransactionRequest, answerChallenge, getCounterParties, getAccountByRouting } from '../../util/ObpApiUtils';
 import { GREY_LIGHT, GREY_MEDIUM, GREY_DARK, WHITE } from 'resources/styles/colours';
 import { StackActions } from '@react-navigation/native';
 import { getLogoSourcePath } from 'src/util/AccountUtils';
@@ -11,25 +11,26 @@ import { Icon } from 'react-native-elements';
 import { selectRecipientReducer, initialState } from 'src/scenes/finances/reducers/SelectRecipientReducer.js';
 
 export function SelectRecipientScreen({ route, navigation }) {
-    const { fromAccount } = route.params;
+    const { fromAccount, counterParty } = route.params;
     const [state, dispatch] = useReducer(selectRecipientReducer, initialState);
-    // const [isLoading, setLoading] = useState(true);
-    // const [counterParties, setCounterParties] = useState([]);
+
+    const retrieveCounterParties = () => {
+        getAsyncStorage('obpToken')
+        .then((token) => {
+            getCounterParties(fromAccount.bank_id, fromAccount.id, token)
+            .then((counterParties) => {
+                dispatch({ type: 'LOAD_COUNTERPARTIES', counterParties: counterParties })
+            });
+        });
+    }
 
     useEffect(() => {
-        const bootstrapAsync = async () => {
-            getAsyncStorage('obpToken')
-            .then((token) => {
-                getCounterParties(fromAccount.bank_id, fromAccount.id, token)
-                .then((counterParties) => {
-                    dispatch({ type: 'LOAD_COUNTERPARTIES', counterParties: counterParties })
-                    // setCounterParties(counterParties);
-                    // setLoading(false);
-                });
-            });
-        }
-        bootstrapAsync()
-    }, []);
+        // Subscribe for the focus listener to refresh the array of accounts whenever the screen is loaded
+        const unsubscribe = navigation.addListener('focus', () => {
+            retrieveCounterParties()
+        });
+        return unsubscribe;
+    }, [navigation]);
 
     return (
         <View style={styles.container}>
@@ -53,14 +54,24 @@ export function SelectRecipientScreen({ route, navigation }) {
                     data={state.counterParties}
                     keyExtractor={(item, index) => `list-item-${index}`}
                     renderItem={({item}) => 
-                        <TouchableOpacity style={styles.counterPartyContainer}>
+                        <TouchableOpacity style={styles.counterPartyContainer} onPress={() => {
+                            navigation.navigate('Make a payment', { 
+                                screen: 'Make a payment', // this needs to be specifically stated to allow passing of params into nested navigator
+                                counterParty: item,
+                                params: {
+                                    fromAccount: fromAccount
+                                }
+                            });
+                            }}>
                             <View style={styles.counterPartyContainerTop}>
-                                <Text style={styles.counterPartyContainerTopText}>{item.name} - {item.description}</Text>
+                                <Text style={styles.counterPartyContainerTopText}>{item.name} ({item.currency})</Text>
                             </View>
                             <View style={styles.counterPartyContainerMiddle}>
-                                <Text style={styles.counterPartyContainerMiddleText}>{item.currency}</Text>
-                                <Text style={styles.counterPartyContainerMiddleText}>{item.other_account_routing_scheme}: {item.other_account_routing_address}</Text>
-                                <Text style={styles.counterPartyContainerMiddleText}>{item.other_account_secondary_routing_scheme}: {item.other_account_secondary_routing_address}</Text>
+                                <Text style={styles.counterPartyContainerMiddleText}>{item.description}</Text>
+                                <Text style={styles.counterPartyContainerMiddleText}>{item.other_account_routing_scheme} - {item.other_account_routing_address}</Text>
+                                {item.other_account_secondary_routing_scheme != undefined && item.other_account_secondary_routing_scheme != "" && (
+                                    <Text style={styles.counterPartyContainerMiddleText}>{item.other_account_secondary_routing_scheme} - {item.other_account_secondary_routing_address}</Text>
+                                )}
                             </View>
                         </TouchableOpacity>
                     }

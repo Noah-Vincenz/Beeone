@@ -3,10 +3,10 @@ import { ActivityIndicator, StyleSheet, FlatList, Text, View, TouchableOpacity, 
 import { FONT_WEIGHT_BOLD, FONT_SIZE_HEADING, FONT_WEIGHT_REGULAR, FONT_SIZE_STANDARD, FONT_SIZE_SMALL, FONT_SIZE_STANDARD_LARGE } from 'resources/styles/typography';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getAsyncStorage } from 'src/util/StorageHelper';
-import { base_url, joinPath, getChallengeTypes, initiateTransactionRequest, answerChallenge } from 'src/util/ObpApiUtils';
+import { base_url, joinPath, getChallengeTypes, initiateTransactionRequest, initiateCounterPartyTransactionRequest, answerChallenge } from 'src/util/ObpApiUtils';
 import { GREY_LIGHT, GREY_MEDIUM, GREY_DARK, GREEN_PARIS, WHITE, BLACK } from 'resources/styles/colours';
 import { StackActions } from '@react-navigation/native';
-import { getLogoSourcePath } from 'src/util/AccountUtils';
+import { getLogoSourcePath, getRealBankName } from 'src/util/AccountUtils';
 import { RadioButton } from 'src/model/RadioButton.js';
 import Picker from '@gregfrench/react-native-wheel-picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -15,7 +15,7 @@ import Moment from 'moment';
 var PickerItem = Picker.Item;
 
 export function PayScreen({ route, navigation }) {
-    const { fromAccount, toAccount } = route.params;
+    const { fromAccount, counterParty } = route.params;
     const [amount, setAmount] = useState('');
     const [reference, setReference] = useState('');
     const [transferType, setTransferType] = useState('');
@@ -31,6 +31,10 @@ export function PayScreen({ route, navigation }) {
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [showFrequencyPicker, setShowFrequencyPicker] = useState(false);
   
+    // onGoBack = data => {
+    //     this.setState(data);
+    // };
+
     const onDateChange = (event, selectedDate) => {
       const currentDate = selectedDate || date;
       setDate(currentDate);
@@ -65,7 +69,7 @@ export function PayScreen({ route, navigation }) {
                                 source={getLogoSourcePath(fromAccount.bank_id)}
                             />
                             <View style={styles.labelAndBankIdContainer}>
-                                <Text style={styles.accountContainerTopText}>{fromAccount.label} ({fromAccount.bank_id})</Text>
+                                <Text style={styles.accountContainerTopText}>{fromAccount.label} ({getRealBankName(fromAccount.bank_id)})</Text>
                             </View>
                         </View>
                         <View style={styles.accountContainerMiddle}>
@@ -74,7 +78,7 @@ export function PayScreen({ route, navigation }) {
                         </View>
                     </View>
                 </View>
-                {toAccount == null ? (
+                {counterParty == null ? (
                     <TouchableOpacity style={styles.accountContainer} onPress={() => {
                         navigation.navigate('Select recipient', {
                             fromAccount: fromAccount
@@ -91,24 +95,19 @@ export function PayScreen({ route, navigation }) {
                         </View>
                     </TouchableOpacity>
                 ) : (
-                    <TouchableOpacity style={styles.accountContainer} onPress={() => { 
+                    <TouchableOpacity style={styles.counterPartyContainer} onPress={() => {
                         navigation.navigate('Select recipient', {
-                            accountsList: accountsList,
                             fromAccount: fromAccount
-                        });
-                        }}>
-                        <View style={styles.accountContainerTop}>
-                            <Image
-                                style={styles.bankLogo}
-                                source={getLogoSourcePath(toAccount.bank_id)}
-                            />
-                            <View style={styles.labelAndBankIdContainer}>
-                                <Text style={styles.accountContainerTopText}>{toAccount.label} ({toAccount.bank_id})</Text>
-                            </View>
+                        });}}>
+                        <View style={styles.counterPartyContainerTop}>
+                            <Text style={styles.counterPartyContainerTopText}>{counterParty.name} ({counterParty.currency})</Text>
                         </View>
-                        <View style={styles.accountContainerMiddle}>
-                            <Text style={styles.accountContainerMiddleText}>{toAccount.account_type}</Text>
-                            <Text style={styles.accountContainerMiddleText}>{toAccount.balance.amount} ({toAccount.balance.currency})</Text>
+                        <View style={styles.counterPartyContainerMiddle}>
+                            <Text style={styles.counterPartyContainerMiddleText}>{counterParty.description}</Text>
+                            <Text style={styles.counterPartyContainerMiddleText}>{counterParty.other_account_routing_scheme} - {counterParty.other_account_routing_address}</Text>
+                            {counterParty.other_account_secondary_routing_scheme != undefined && counterParty.other_account_secondary_routing_scheme != "" && (
+                                <Text style={styles.counterPartyContainerMiddleText}>{counterParty.other_account_secondary_routing_scheme} - {counterParty.other_account_secondary_routing_address}</Text>
+                            )}
                         </View>
                     </TouchableOpacity>
                 )}
@@ -175,8 +174,8 @@ export function PayScreen({ route, navigation }) {
                         </View>
                     )}
                 </View>
-                <TouchableOpacity style={amount > 0 && toAccount != undefined ? styles.doneButtonEnabled : styles.doneButtonDisabled} disabled={amount == 0 || toAccount == undefined} onPress={() => {
-                    transfer(fromAccount.bank_id, fromAccount.id, toAccount.bank_id, toAccount.id, amount);
+                <TouchableOpacity style={amount > 0 && counterParty != undefined ? styles.doneButtonEnabled : styles.doneButtonDisabled} disabled={amount == 0 || counterParty == undefined} onPress={() => {
+                    transfer(fromAccount.bank_id, fromAccount.id, counterParty.counterparty_id, reference, amount);
                     // apply timeout to show updated account balances - unless transfer is taking longer than expected
                     // we could add another API call here to check for the status of the transaction request
                     setTimeout(navigation.goBack,
@@ -190,35 +189,35 @@ export function PayScreen({ route, navigation }) {
     );
 };
 
-function transfer(fromBankId, fromAccountId, toBankId, toAccountId, amount) {
+function transfer(fromBankId, fromAccountId, counterPartyId, reference, amount) {
     getAsyncStorage('obpToken')
     .then((token) => {
         getChallengeTypes(fromBankId, fromAccountId, token)
         .then((challengeTypes) => {
-          const challengeType = challengeTypes[0] // just gets first challenge type from available types
-          initiateTransactionRequest(fromBankId, fromAccountId, toBankId, toAccountId, challengeType, token, amount)
-          .then((initiateResponse) => {
-            if(initiateResponse.code != null && initiateResponse.code == 400 || initiateResponse.code == 404) {
-              console.error(initiateResponse)
-            }
-            else if (initiateResponse.challenges != null) {
-                // answer the challenge
-                const challengeQuery = initiateResponse.challenges[0].id
-                const transactionReqId = initiateResponse.id
-    
-                const challengeResponse = answerChallenge(fromBankId, fromAccountId, transactionReqId, challengeQuery) 
-                if("error" in challengeResponse) {
-                    console.error(challengeResponse)
+            const challengeType = challengeTypes[3] // just gets COUNTERPARTY challengetype
+            initiateCounterPartyTransactionRequest(fromBankId, fromAccountId, counterPartyId, challengeType, token, 'EUR', reference, amount) // using EUR now
+            .then((initiateResponse) => {
+                if(initiateResponse.code != null && initiateResponse.code == 400 || initiateResponse.code == 404) {
+                console.error(initiateResponse)
                 }
-                console.log(`Transaction status: ${challengeResponse.status}`);
-                console.log(`Transaction created: ${challengeResponse.transaction_ids}`);
-            }
-            else {
-                // There was no challenge, transaction was created immediately
-                console.log("Transaction was successfully created:")
-                console.log(initiateResponse)
-            }
-          });
+                else if (initiateResponse.challenges != null) {
+                    // answer the challenge
+                    const challengeQuery = initiateResponse.challenges[0].id
+                    const transactionReqId = initiateResponse.id
+        
+                    const challengeResponse = answerChallenge(fromBankId, fromAccountId, transactionReqId, challengeQuery) 
+                    if("error" in challengeResponse) {
+                        console.error(challengeResponse)
+                    }
+                    console.log(`Transaction status: ${challengeResponse.status}`);
+                    console.log(`Transaction created: ${challengeResponse.transaction_ids}`);
+                }
+                else {
+                    // There was no challenge, transaction was created immediately
+                    console.log("Transaction was successfully created:")
+                    console.log(initiateResponse)
+                }
+            });
         });
     })
     .catch((error) => console.error(error));
@@ -267,6 +266,34 @@ const styles = StyleSheet.create({
         color: GREY_DARK
     },
     accountContainerMiddleText: {
+        fontWeight: FONT_WEIGHT_REGULAR,
+        fontSize: FONT_SIZE_SMALL,
+        color: GREY_DARK
+    },
+    counterPartyContainer: {
+        alignSelf: 'center',
+        width: '97%',
+        marginVertical: '0.5%',
+        borderColor: GREY_MEDIUM,
+        borderWidth: 1,
+        borderTopWidth: 1.5,
+    },
+    counterPartyContainerTop: {
+        flexDirection: 'row',
+        backgroundColor: WHITE,
+        padding: '2%',
+    },
+    counterPartyContainerMiddle: {
+        backgroundColor: WHITE,
+        alignItems: 'flex-start',
+        padding: '1%',
+    },
+    counterPartyContainerTopText: {
+        fontWeight: FONT_WEIGHT_REGULAR,
+        fontSize: FONT_SIZE_STANDARD,
+        color: GREY_DARK
+    },
+    counterPartyContainerMiddleText: {
         fontWeight: FONT_WEIGHT_REGULAR,
         fontSize: FONT_SIZE_SMALL,
         color: GREY_DARK

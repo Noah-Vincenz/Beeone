@@ -7,7 +7,7 @@ import { getAsyncStorage } from 'src/util/StorageHelper';
 import { base_url, joinPath, getAccount, getBankIdsAndAccountIdsAndAccountTypes } from 'src/util/ObpApiUtils';
 import { BLACK, GREEN_FOREST, GREEN_MINT, GREEN_PARIS, GREY_DARK, GREY_LIGHT, GREY_MEDIUM } from 'resources/styles/colours';
 import { FONT_SIZE_SMALL, FONT_SIZE_STANDARD, FONT_WEIGHT_REGULAR } from 'resources/styles/typography';
-import { getLogoSourcePath } from 'src/util/AccountUtils';
+import { getLogoSourcePath, getRealBankName } from 'src/util/AccountUtils';
 import { accountsReducer, initialState } from 'src/scenes/finances/reducers/AccountsReducer.js';
 
 export function AccountsScreen({ navigation }) {
@@ -33,10 +33,12 @@ export function AccountsScreen({ navigation }) {
       .then((bankIdsAndAccountIdsAndAccountTypes) => {
         const promises = []; // to store all returned promises
         bankIdsAndAccountIdsAndAccountTypes.bankIds.forEach(function (item, index) { // we use promises here to run asynchronous operations in parallel
-          promises.push(getAccount(item, bankIdsAndAccountIdsAndAccountTypes.accountIds[index], bankIdsAndAccountIdsAndAccountTypes.accountTypes[index], token));
+          const acc = getAccount(item, bankIdsAndAccountIdsAndAccountTypes.accountIds[index], bankIdsAndAccountIdsAndAccountTypes.accountTypes[index], token)
+          promises.push(acc);
         }); 
         Promise.all(promises).then((listOfAccounts) => { // Promise.all() to collect results in order
           // only when all promises have been collected this is executed
+          console.log(listOfAccounts);
           dispatch({ type: 'LOAD_ACCOUNTS', listOfAccounts: listOfAccounts }); // sets loading to false and sets accounts
         });     
       });
@@ -68,7 +70,7 @@ export function AccountsScreen({ navigation }) {
                 source={getLogoSourcePath(item.bank_id)}
                 />
                 <View style={styles.labelAndBankIdContainer}>
-                  <Text style={styles.accountContainerTopText}>{item.label} ({item.bank_id})</Text>
+                  <Text style={styles.accountContainerTopText}>{item.label} ({getRealBankName(item.bank_id)})</Text>
                 </View>
               </View>
               <View style={styles.accountContainerMiddle}>
