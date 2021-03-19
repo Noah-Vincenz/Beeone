@@ -7,24 +7,24 @@ import { getAsyncStorage } from 'src/util/StorageHelper';
 import { base_url, joinPath, getAccount, getBankIdsAndAccountIdsAndAccountTypes } from 'src/util/ObpApiUtils';
 import { BLACK, GREEN_FOREST, GREEN_MINT, GREEN_PARIS, GREY_DARK, GREY_LIGHT, GREY_MEDIUM } from 'resources/styles/colours';
 import { FONT_SIZE_SMALL, FONT_SIZE_STANDARD, FONT_WEIGHT_REGULAR } from 'resources/styles/typography';
-import { getLogoSourcePath, getRealBankName } from 'src/util/AccountUtils';
+import { getLogoSourcePath, getRealBankId } from 'src/util/AccountUtils';
 import { accountsReducer, initialState } from 'src/scenes/finances/reducers/AccountsReducer.js';
 
 export function AccountsScreen({ navigation }) {
   const [state, dispatch] = useReducer(accountsReducer, initialState);
-  const [isAddButtonVisible, setAddButtonVisible] = useState(true);
-  const handleScroll = (nativeEvent) => {
-    if (isCloseToBottom(nativeEvent)) {
-      setAddButtonVisible(false);
-    }
-  }
+  // const [isAddButtonVisible, setAddButtonVisible] = useState(true);
+  // const handleScroll = (nativeEvent) => {
+  //   if (isCloseToBottom(nativeEvent)) {
+  //     setAddButtonVisible(false);
+  //   }
+  // }
 
-  const handleNoScroll = () => setAddButtonVisible(true);
+  // const handleNoScroll = () => setAddButtonVisible(true);
 
-  const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
-    const paddingToBottom = 20;
-    return layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom;
-  };
+  // const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
+  //   const paddingToBottom = 20;
+  //   return layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom;
+  // };
 
   const retrieveAccounts = () => {
     getAsyncStorage('obpToken')
@@ -38,7 +38,6 @@ export function AccountsScreen({ navigation }) {
         }); 
         Promise.all(promises).then((listOfAccounts) => { // Promise.all() to collect results in order
           // only when all promises have been collected this is executed
-          console.log(listOfAccounts);
           dispatch({ type: 'LOAD_ACCOUNTS', listOfAccounts: listOfAccounts }); // sets loading to false and sets accounts
         });     
       });
@@ -60,8 +59,8 @@ export function AccountsScreen({ navigation }) {
           style={styles.accountsListContainer}
           data={state.accounts}
           keyExtractor={(item, index) => `list-item-${index}`}
-          onScroll={({nativeEvent}) => handleScroll(nativeEvent)} // hide button to add account if we are at the bottom of screen
-          onScrollEndDrag={handleNoScroll} // show button to add account
+          // onScroll={({nativeEvent}) => handleScroll(nativeEvent)} // hide button to add account if we are at the bottom of screen
+          // onScrollEndDrag={handleNoScroll} // show button to add account
           renderItem={({item}) => 
             <View style={styles.accountContainer}>
               <View style={styles.accountContainerTop}>
@@ -70,7 +69,7 @@ export function AccountsScreen({ navigation }) {
                 source={getLogoSourcePath(item.bank_id)}
                 />
                 <View style={styles.labelAndBankIdContainer}>
-                  <Text style={styles.accountContainerTopText}>{item.label} ({getRealBankName(item.bank_id)})</Text>
+                  <Text style={styles.accountContainerTopText}>{item.label} ({getRealBankId(item.bank_id)})</Text>
                 </View>
               </View>
               <View style={styles.accountContainerMiddle}>
@@ -102,13 +101,13 @@ export function AccountsScreen({ navigation }) {
           }
         />
       )}
-      {isAddButtonVisible && (
-        <View style={styles.addAccountContainer}>
-          <TouchableOpacity style={styles.addAccountButton} onPress={() => navigation.navigate('Add Account')}>
-            <Text style={styles.addAccountButtonText}>Add Account</Text>
-          </TouchableOpacity>
-        </View>
-      )}
+      {/* {isAddButtonVisible && ( */}
+      <View style={styles.addAccountContainer}>
+        <TouchableOpacity style={styles.addAccountButton} onPress={() => navigation.navigate('Add Account')}>
+          <Text style={styles.addAccountButtonText}>Add Account</Text>
+        </TouchableOpacity>
+      </View>
+      {/* )} */}
     </View>
   );
 };
@@ -121,6 +120,7 @@ const styles = StyleSheet.create({
     },
     accountsListContainer: {
       width: '100%',
+      paddingBottom: '20%'
     },
     accountContainer: {
       alignSelf: 'center',
@@ -139,7 +139,8 @@ const styles = StyleSheet.create({
       flex: 1,
       width: null,
       height: null,
-      resizeMode: 'contain'
+      resizeMode: 'contain',
+      marginRight: '1%'
     },
     labelAndBankIdContainer: {
       flex: 10

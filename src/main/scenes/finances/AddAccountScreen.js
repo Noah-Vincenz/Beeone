@@ -1,15 +1,19 @@
 import React, { useEffect, useState, useReducer } from 'react';
-import { ActivityIndicator, StyleSheet, FlatList, Text, View, TouchableOpacity } from 'react-native';
-import { FONT_WEIGHT_BOLD, FONT_SIZE_HEADING } from 'resources/styles/typography';
+import { ActivityIndicator, StyleSheet, FlatList, Text, TextInput, View, TouchableOpacity, Image } from 'react-native';
+import { FONT_WEIGHT_BOLD, FONT_SIZE_HEADING, FONT_WEIGHT_REGULAR, FONT_SIZE_STANDARD } from 'resources/styles/typography';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getAsyncStorage } from '../../util/StorageHelper';
 import { base_url, joinPath } from '../../util/ObpApiUtils';
+import { getLogoSourcePath, getRealBankName } from '../../util/AccountUtils';
 import { GREY_LIGHT, WHITE, SECONDARY } from 'resources/styles/colours';
-import { addAccountReducer, initialState } from 'src/scenes/finances/reducers/AddAccountReducer.js';
+import { BLACK, GREY_DARK, GREY_MEDIUM } from '../../resources/styles/colours';
 
 export function AddAccountScreen({ navigation }) {
-
-  const [state, dispatch] = useReducer(addAccountReducer, initialState);
+  const [isLoading, setLoading] = useState(true);
+  const [masterBanks, setMasterBanks] = useState([]);
+  const [filteredBanks, setFilteredBanks] = useState([]);
+  const [search, setSearch] = useState('');
+  const numColumns = 2;
 
   useEffect(() => {
     getAsyncStorage('obpToken')
@@ -21,40 +25,106 @@ export function AddAccountScreen({ navigation }) {
         },
       })
       .then((response) => response.json())
-      .then((json) => dispatch({ type: 'LOAD_BANKS', banks: json.banks }))
+      .then((json) => { 
+        setMasterBanks(json.banks)
+        setFilteredBanks(json.banks.slice(0,6))
+        setLoading(false);
+      }) 
       .catch((error) => console.error(error))
     })
   }, []);
+  
+  const searchFilterFunction = (text) => {
+    if (text) {
+      const newData = masterBanks.filter(function (item) {
+        // apply filter for text inserted in search bar
+        const itemData = getRealBankName(item.id)
+          ? getRealBankName(item.id).toUpperCase()
+          : ''.toUpperCase();
+        const textData = text.toUpperCase();
+        return itemData.indexOf(textData) > -1;
+      });
+      setFilteredBanks(newData);
+      setSearch(text);
+    } else { // when searched text is blank
+      setFilteredBanks(masterBanks.slice(0,6));
+      setSearch(text);
+    }
+  };
+
   return (
     <View style={styles.container}>
-        <Text>Select Bank</Text>
-        {state.isLoading ? <ActivityIndicator/> : (
+        <TextInput
+          style={styles.textInputStyle}
+          onChangeText={(text) => searchFilterFunction(text)}
+          value={search}
+          placeholder="Search"
+        />
+        {isLoading ? <ActivityIndicator/> : (
             <FlatList 
-            data={state.banks}
+            style={styles.accountsContainer}
+            numColumns={numColumns}
+            data={filteredBanks} // we only want to display the first 6 banks; the others can be searched
             keyExtractor={(item, index) => `list-item-${index}`}
-            renderItem={({item}) => <Text>{item.short_name}</Text>}
-            />
+            renderItem={({item}) => 
+              <View style={styles.accountContainer}>
+                <Image
+                style={styles.bankLogo}
+                source={getLogoSourcePath(item.id)}
+                />
+                <View style={styles.bankIdContainer}>
+                  <Text style={styles.accountContainerText}>{getRealBankName(item.id)}</Text>
+                </View>
+              </View>
+            }/>
         )}
-        <TouchableOpacity style={styles.buttonStyles}>
-            <Text style={styles.buttonText}>Add</Text>
-        </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: GREY_LIGHT
+      flex: 1,
+      alignItems: 'center',
+      backgroundColor: GREY_LIGHT
     },
-    buttonStyles: {
-      backgroundColor: SECONDARY,
+    textInputStyle: {
+      height: '8%',
+      width: '97%',
+      paddingLeft: 10,
+      margin: 5,
+      fontSize: FONT_SIZE_STANDARD,
+      borderColor: GREY_MEDIUM,
+      borderWidth: 1,
+      borderTopWidth: 1.5,
+      backgroundColor: WHITE
     },
-    buttonText: {
-        color: WHITE,
-        fontWeight: FONT_WEIGHT_BOLD,
-        fontSize: FONT_SIZE_HEADING
-    }
+    accountsContainer: {
+      backgroundColor: GREY_LIGHT,
+      width: '100%',
+    },
+    accountContainer: {
+      backgroundColor: GREY_MEDIUM,
+      alignItems: 'center',
+      flex: 1,
+      height: 180,
+      margin: '1.5%',
+      justifyContent: 'center',
+      paddingTop: '5%'
+    },
+    bankLogo: {
+      flex: 2,
+      resizeMode: 'contain',
+    },
+    bankIdContainer: {
+      flex: 1,
+      width: '100%',
+      justifyContent: 'center'
+    },
+    accountContainerText: {
+      fontWeight: FONT_WEIGHT_REGULAR,
+      fontSize: FONT_SIZE_STANDARD,
+      color: BLACK,
+      textAlign: 'center'
+    },
 });

@@ -177,7 +177,6 @@ export const initiateCounterPartyTransactionRequest = async (senderBankId, sende
 }  
 
 export const createCounterParty = async (senderBankId, senderAccountId, counterpartyName, counterpartyDescription, counterpartyCurrency, counterpartyRoutingScheme, counterpartyRoutingAddress, bankId, token) => {
-    console.log('creating counterparty')
     try {
         let response = await fetch(joinPath(base_url, `/obp/v4.0.0/banks/${senderBankId}/accounts/${senderAccountId}/firehose/counterparties`), {
             method: 'POST',
@@ -201,7 +200,6 @@ export const createCounterParty = async (senderBankId, senderAccountId, counterp
             })
         });
         let json = await response.json();
-        console.log(json);
         return json
     } catch(error) {
         console.error(error);

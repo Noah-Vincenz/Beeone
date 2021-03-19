@@ -6,7 +6,7 @@ import { getAsyncStorage } from 'src/util/StorageHelper';
 import { base_url, joinPath, getChallengeTypes, initiateTransactionRequest, initiateCounterPartyTransactionRequest, answerChallenge } from 'src/util/ObpApiUtils';
 import { GREY_LIGHT, GREY_MEDIUM, GREY_DARK, GREEN_PARIS, WHITE, BLACK } from 'resources/styles/colours';
 import { StackActions } from '@react-navigation/native';
-import { getLogoSourcePath, getRealBankName } from 'src/util/AccountUtils';
+import { getLogoSourcePath, getRealBankId } from 'src/util/AccountUtils';
 import { RadioButton } from 'src/model/RadioButton.js';
 import Picker from '@gregfrench/react-native-wheel-picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -69,7 +69,7 @@ export function PayScreen({ route, navigation }) {
                                 source={getLogoSourcePath(fromAccount.bank_id)}
                             />
                             <View style={styles.labelAndBankIdContainer}>
-                                <Text style={styles.accountContainerTopText}>{fromAccount.label} ({getRealBankName(fromAccount.bank_id)})</Text>
+                                <Text style={styles.accountContainerTopText}>{fromAccount.label} ({getRealBankId(fromAccount.bank_id)})</Text>
                             </View>
                         </View>
                         <View style={styles.accountContainerMiddle}>
@@ -250,7 +250,8 @@ const styles = StyleSheet.create({
         flex: 1,
         width: null,
         height: null,
-        resizeMode: 'contain'
+        resizeMode: 'contain',
+        marginRight: '1%'
     },
     labelAndBankIdContainer: {
         flex: 10
