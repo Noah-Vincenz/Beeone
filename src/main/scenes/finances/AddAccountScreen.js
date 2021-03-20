@@ -67,7 +67,8 @@ export function AddAccountScreen({ navigation }) {
       return <View style={[styles.accountContainer, styles.accountContainerInvisible]}/>;
     }
     return (
-      <View style={styles.accountContainer}>
+      <TouchableOpacity style={styles.accountContainer}>
+        {/* TODO: use onPress redirect to API's redirect URL to accept permission to access bank account data for 90 days> */}
         <Image
           style={styles.bankLogo}
           source={getLogoSourcePath(item.id)}
@@ -75,7 +76,7 @@ export function AddAccountScreen({ navigation }) {
         <View style={styles.bankIdContainer}>
           <Text style={styles.accountContainerText}>{getRealBankName(item.id)}</Text>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   };
 
