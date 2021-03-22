@@ -4,7 +4,7 @@ import { FONT_WEIGHT_BOLD, FONT_SIZE_HEADING } from 'resources/styles/typography
 import { WHITE, SECONDARY } from 'resources/styles/colours'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getAsyncStorage } from 'src/util/StorageHelper';
-import { base_url, joinPath, getAccount, getBankIdsAndAccountIdsAndAccountTypes } from 'src/util/ObpApiUtils';
+import { base_url, joinPath, getAccount, getBankIdsAndAccountIdsAndAccountTypesAndRoutings } from 'src/util/ObpApiUtils';
 import { BLACK, GREEN_FOREST, GREEN_MINT, GREEN_PARIS, GREY_DARK, GREY_LIGHT, GREY_MEDIUM } from 'resources/styles/colours';
 import { FONT_SIZE_SMALL, FONT_SIZE_STANDARD, FONT_WEIGHT_REGULAR } from 'resources/styles/typography';
 import { getLogoSourcePath, getRealBankId } from 'src/util/AccountUtils';
@@ -29,11 +29,11 @@ export function AccountsScreen({ navigation }) {
   const retrieveAccounts = () => {
     getAsyncStorage('obpToken')
     .then((token) => {
-      getBankIdsAndAccountIdsAndAccountTypes(token)
-      .then((bankIdsAndAccountIdsAndAccountTypes) => {
+      getBankIdsAndAccountIdsAndAccountTypesAndRoutings(token)
+      .then((bankIdsAndAccountIdsAndAccountTypesAndRoutings) => {
         const promises = []; // to store all returned promises
-        bankIdsAndAccountIdsAndAccountTypes.bankIds.forEach(function (item, index) { // we use promises here to run asynchronous operations in parallel
-          const acc = getAccount(item, bankIdsAndAccountIdsAndAccountTypes.accountIds[index], bankIdsAndAccountIdsAndAccountTypes.accountTypes[index], token)
+        bankIdsAndAccountIdsAndAccountTypesAndRoutings.bankIds.forEach(function (item, index) { // we use promises here to run asynchronous operations in parallel
+          const acc = getAccount(item, bankIdsAndAccountIdsAndAccountTypesAndRoutings.accountIds[index], bankIdsAndAccountIdsAndAccountTypesAndRoutings.accountTypes[index], bankIdsAndAccountIdsAndAccountTypesAndRoutings.accountRoutings[index], token)
           promises.push(acc);
         }); 
         Promise.all(promises).then((listOfAccounts) => { // Promise.all() to collect results in order
@@ -63,19 +63,24 @@ export function AccountsScreen({ navigation }) {
           // onScrollEndDrag={handleNoScroll} // show button to add account
           renderItem={({item}) => 
             <View style={styles.accountContainer}>
-              <View style={styles.accountContainerTop}>
-                <Image
-                style={styles.bankLogo}
-                source={getLogoSourcePath(item.bank_id)}
-                />
-                <View style={styles.labelAndBankIdContainer}>
-                  <Text style={styles.accountContainerTopText}>{item.label} ({getRealBankId(item.bank_id)})</Text>
+              <TouchableOpacity onPress={() => {
+                navigation.navigate('Account Information', { 
+                  fromAccount: item
+                })}}>
+                <View style={styles.accountContainerTop}>
+                  <Image
+                  style={styles.bankLogo}
+                  source={getLogoSourcePath(item.bank_id)}
+                  />
+                  <View style={styles.labelAndBankIdContainer}>
+                    <Text style={styles.accountContainerTopText}>{item.label} ({getRealBankId(item.bank_id)})</Text>
+                  </View>
                 </View>
-              </View>
-              <View style={styles.accountContainerMiddle}>
-                <Text style={styles.accountContainerMiddleText}>{item.account_type}</Text>
-                <Text style={styles.accountContainerMiddleText}>{item.balance.amount} ({item.balance.currency})</Text>
-              </View>
+                <View style={styles.accountContainerMiddle}>
+                  <Text style={styles.accountContainerMiddleText}>{item.account_type}</Text>
+                  <Text style={styles.accountContainerMiddleText}>{item.balance.amount} ({item.balance.currency})</Text>
+                </View>
+              </TouchableOpacity>
               <View style={styles.accountContainerBottom}>
                 <TouchableOpacity style={styles.payTransferButton} onPress={() =>
                   navigation.navigate('Make a payment', { 

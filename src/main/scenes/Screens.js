@@ -12,10 +12,14 @@ import { getAsyncStorage } from '../util/StorageHelper';
 import { GREEN_MINT, GREEN_PARIS, GREY_LIGHT } from 'resources/styles/colours';
 import { FONT_SIZE_SMALL, FONT_SIZE_STANDARD } from 'resources/styles/typography';
 import { TransferScreen } from './finances/TransferScreen.js';
+import { DirectDebitsScreen } from './finances/DirectDebitsScreen.js';
+import { TransactionsScreen } from './finances/TransactionsScreen.js';
+import { StandingOrdersScreen } from './finances/StandingOrdersScreen.js';
 import { ChooseAccountScreen } from './finances/ChooseAccountScreen.js';
 import { SelectRecipientScreen } from './finances/SelectRecipientScreen.js';
 import { PaySomeoneNewScreen } from './finances/PaySomeoneNewScreen.js';
 import { PayScreen } from './finances/PayScreen.js';
+import { AccountInformationScreen } from './finances/AccountInformationScreen.js';
 import { StackActions } from '@react-navigation/native';
 import { ImpactScreen } from './ImpactScreen';
 import { AccountsScreen } from './AccountsScreen';
@@ -103,6 +107,10 @@ const FinancesNavStack = () => {
       <FinancesStack.Screen name="Add Account" component={AddAccountScreen}/>
       <FinancesStack.Screen name="Transfer between accounts" component={TransferNavStack} options={{ headerShown: false }}/>
       <FinancesStack.Screen name="Make a payment" component={PayNavStack} options={{ headerShown: false }}/>
+      <FinancesStack.Screen name="Account Information" component={AccountInformationScreen}/>
+      <FinancesStack.Screen name="Transactions" component={TransactionsScreen}/>
+      <FinancesStack.Screen name="Direct Debits" component={DirectDebitsScreen}/>
+      <FinancesStack.Screen name="Standing Orders" component={StandingOrdersScreen}/>
     </FinancesStack.Navigator>
   );
 }

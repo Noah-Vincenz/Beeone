@@ -30,10 +30,6 @@ export function PayScreen({ route, navigation }) {
     const [date, setDate] = useState(new Date());
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [showFrequencyPicker, setShowFrequencyPicker] = useState(false);
-  
-    // onGoBack = data => {
-    //     this.setState(data);
-    // };
 
     const onDateChange = (event, selectedDate) => {
       const currentDate = selectedDate || date;

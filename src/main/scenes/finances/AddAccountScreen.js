@@ -3,7 +3,7 @@ import { ActivityIndicator, StyleSheet, FlatList, Text, TextInput, View, Touchab
 import { FONT_WEIGHT_BOLD, FONT_SIZE_HEADING, FONT_WEIGHT_REGULAR, FONT_SIZE_STANDARD } from 'resources/styles/typography';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getAsyncStorage } from '../../util/StorageHelper';
-import { base_url, joinPath } from '../../util/ObpApiUtils';
+import { base_url, getBanks, joinPath } from '../../util/ObpApiUtils';
 import { getLogoSourcePath, getRealBankName } from '../../util/AccountUtils';
 import { GREY_LIGHT, WHITE, SECONDARY } from 'resources/styles/colours';
 import { BLACK, GREY_DARK, GREY_MEDIUM } from '../../resources/styles/colours';
@@ -18,16 +18,10 @@ export function AddAccountScreen({ navigation }) {
   useEffect(() => {
     getAsyncStorage('obpToken')
     .then((token) => {
-      fetch(joinPath(base_url, '/obp/v4.0.0/banks'), {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `DirectLogin token="${token}"`
-        },
-      })
-      .then((response) => response.json())
-      .then((json) => { 
-        setMasterBanks(json.banks)
-        setFilteredBanks(json.banks.slice(0,6))
+      getBanks(token)
+      .then((banks) => { 
+        setMasterBanks(banks)
+        setFilteredBanks(banks.slice(0,6))
         setLoading(false);
       }) 
       .catch((error) => console.error(error))

@@ -18,7 +18,7 @@ export const login = async (username, password, consumerKey) => {
     }
 }
 
-export const getBankIdsAndAccountIdsAndAccountTypes = async (token) => {
+export const getBankIdsAndAccountIdsAndAccountTypesAndRoutings = async (token) => {
     try {
       let response = await fetch(joinPath(base_url, `/obp/v4.0.0/my/accounts`), {
         headers: {
@@ -30,7 +30,8 @@ export const getBankIdsAndAccountIdsAndAccountTypes = async (token) => {
       const bankIds = json.accounts.map(x => x.bank_id) // return array of account ids
       const accountIds = json.accounts.map(x => x.id) // return array of account ids
       const accountTypes = json.accounts.map(x => x.account_type) // return array of account types
-      return {bankIds, accountIds, accountTypes};
+      const accountRoutings = json.accounts.map(x => x.account_routings) // return array of account types
+      return {bankIds, accountIds, accountTypes, accountRoutings};
     } catch(error) {
       console.error(error);
     }
@@ -46,7 +47,7 @@ export const getBankIdsAndAccountIdsAndAccountTypes = async (token) => {
  * @param {Array} listOfAccounts 
  * @param {string} token 
  */
-export function getAccount(bankId, accountId, accountType, token) {
+export function getAccount(bankId, accountId, accountType, accountRoutings, token) {
     return new Promise(resolve => {
       fetch(joinPath(base_url, `/obp/v4.0.0/my/banks/${bankId}/accounts/${accountId}/account`), {
         headers: {
@@ -57,6 +58,7 @@ export function getAccount(bankId, accountId, accountType, token) {
       .then((response) => response.json())
       .then((json) => {
         json['account_type'] = accountType;
+        json['account_routings'] = accountRoutings;
         resolve(json);
       })
       .catch((error) => {
@@ -201,6 +203,36 @@ export const createCounterParty = async (senderBankId, senderAccountId, counterp
         });
         let json = await response.json();
         return json
+    } catch(error) {
+        console.error(error);
+    }
+}
+
+export const getBanks = async (token) => {
+    try {
+        let response = await fetch(joinPath(base_url, `/obp/v4.0.0/banks`), {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `DirectLogin token="${token}"`
+            }
+        });
+        let json = await response.json();
+        return json.banks
+    } catch(error) {
+        console.error(error);
+    }
+}
+
+export const getTransactions = async (bankId, accountId, token) => {
+    try {
+        let response = await fetch(joinPath(base_url, `/obp/v4.0.0/banks/${bankId}/accounts/${accountId}/owner/transactions`), {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `DirectLogin token="${token}"`
+            }
+        });
+        let json = await response.json();
+        return json.transactions
     } catch(error) {
         console.error(error);
     }
