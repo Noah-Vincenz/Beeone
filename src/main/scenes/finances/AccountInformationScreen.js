@@ -97,10 +97,10 @@ const styles = StyleSheet.create({
       alignSelf: 'center',
       width: '97%',
       marginVertical: '1%',
-      borderColor: GREY_MEDIUM,
+      borderColor: GREY_DARK,
       borderWidth: 1,
-      backgroundColor: WHITE,
       borderTopWidth: 1.5,
+      backgroundColor: WHITE,
     },
     accountContainerTop: {
       flexDirection: 'row',

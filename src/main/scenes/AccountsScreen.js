@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
       alignSelf: 'center',
       width: '97%',
       marginVertical: '1%',
-      borderColor: GREY_MEDIUM,
+      borderColor: GREY_DARK,
       borderWidth: 1,
       borderTopWidth: 1.5,
     },
