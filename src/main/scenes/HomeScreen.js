@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, TextInput, Image } from 'react-native';
 import { FONT_WEIGHT_BOLD, FONT_SIZE_HEADING, FONT_WEIGHT_REGULAR, FONT_SIZE_STANDARD } from 'resources/styles/typography';
-import { GREEN_PARIS, GREY_LIGHT, BLACK, WHITE, GREY_DARK, GREY_MEDIUM } from 'resources/styles/colours';
+import { GREEN_PARIS, GREY_LIGHT, BLACK, WHITE, GREY_DARK, GREY_MEDIUM, GREY_EXTRA_LIGHT } from 'resources/styles/colours';
 
 export function HomeScreen({ navigation }) {
   const [message, setMessage] = useState('');
@@ -30,7 +30,7 @@ export function HomeScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   parentContainer:{
-    backgroundColor: GREY_LIGHT,
+    backgroundColor: GREY_EXTRA_LIGHT,
     flex: 1,
   },
   mainContainer:{

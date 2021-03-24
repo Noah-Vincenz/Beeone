@@ -5,7 +5,7 @@ import { WHITE, SECONDARY } from 'resources/styles/colours'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getAsyncStorage } from 'src/util/StorageHelper';
 import { base_url, joinPath, getAccount, getBankIdsAndAccountIdsAndAccountTypesAndRoutings } from 'src/util/ObpApiUtils';
-import { BLACK, GREEN_FOREST, GREEN_MINT, GREEN_PARIS, GREY_DARK, GREY_LIGHT, GREY_MEDIUM } from 'resources/styles/colours';
+import { BLACK, GREEN_FOREST, GREEN_MINT, GREEN_PARIS, GREY_DARK, GREY_LIGHT, GREY_MEDIUM, GREY_EXTRA_LIGHT } from 'resources/styles/colours';
 import { FONT_SIZE_SMALL, FONT_SIZE_STANDARD, FONT_WEIGHT_REGULAR } from 'resources/styles/typography';
 import { getLogoSourcePath, getRealBankId } from 'src/util/AccountUtils';
 import { accountsReducer, initialState } from 'src/scenes/finances/reducers/AccountsReducer.js';
@@ -119,7 +119,7 @@ export function AccountsScreen({ navigation }) {
 
 const styles = StyleSheet.create({
     container: {
-      backgroundColor: GREY_LIGHT,
+      backgroundColor: GREY_EXTRA_LIGHT,
       flex: 1,
       alignItems: 'center'
     },

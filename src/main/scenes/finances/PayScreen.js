@@ -4,7 +4,7 @@ import { FONT_WEIGHT_BOLD, FONT_SIZE_HEADING, FONT_WEIGHT_REGULAR, FONT_SIZE_STA
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getAsyncStorage } from 'src/util/StorageHelper';
 import { base_url, joinPath, getChallengeTypes, initiateTransactionRequest, initiateCounterPartyTransactionRequest, answerChallenge } from 'src/util/ObpApiUtils';
-import { GREY_LIGHT, GREY_MEDIUM, GREY_DARK, GREEN_PARIS, WHITE, BLACK } from 'resources/styles/colours';
+import { GREY_LIGHT, GREY_MEDIUM, GREY_DARK, GREEN_PARIS, WHITE, BLACK, GREY_EXTRA_LIGHT } from 'resources/styles/colours';
 import { StackActions } from '@react-navigation/native';
 import { getLogoSourcePath, getRealBankId } from 'src/util/AccountUtils';
 import { RadioButton } from 'src/model/RadioButton.js';
@@ -221,7 +221,7 @@ function transfer(fromBankId, fromAccountId, counterPartyId, reference, amount) 
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: GREY_LIGHT,
+        backgroundColor: GREY_EXTRA_LIGHT,
         flex: 1,
     },
     scrollContainer: {

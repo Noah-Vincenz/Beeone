@@ -7,7 +7,7 @@ import { base_url, joinPath, getChallengeTypes, initiateTransactionRequest, answ
 import { GREY_LIGHT, GREY_MEDIUM, GREY_DARK } from 'resources/styles/colours';
 import { StackActions, useNavigation } from '@react-navigation/native';
 import { getLogoSourcePath } from 'src/util/AccountUtils';
-import { BLACK, GREEN_FOREST, GREEN_KELLY, GREEN_MINT, GREEN_PARIS, GREEN_SACRAMENTO, WHITE } from 'resources/styles/colours';
+import { BLACK, GREEN_FOREST, GREEN_KELLY, GREEN_MINT, GREEN_PARIS, GREEN_SACRAMENTO, WHITE, GREY_EXTRA_LIGHT } from 'resources/styles/colours';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { createCounterParty } from '../../util/ObpApiUtils';
 
@@ -109,7 +109,7 @@ export function PaySomeoneNewScreen({ route, navigation }) {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: GREY_LIGHT,
+        backgroundColor: GREY_EXTRA_LIGHT,
         flex: 1,
         alignItems: 'center',
         paddingTop: '2%'

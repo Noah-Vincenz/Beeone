@@ -6,7 +6,7 @@ import { getAsyncStorage } from '../../util/StorageHelper';
 import { base_url, joinPath, getTransactions } from '../../util/ObpApiUtils';
 import { getLogoSourcePath, getRealBankName, getRealBankId } from '../../util/AccountUtils';
 import { GREY_LIGHT, WHITE, SECONDARY } from 'resources/styles/colours';
-import { BLACK, GREY_DARK, GREY_MEDIUM } from '../../resources/styles/colours';
+import { BLACK, GREY_DARK, GREY_EXTRA_LIGHT, GREY_MEDIUM } from '../../resources/styles/colours';
 import Moment from 'moment';
 
 export function TransactionsScreen({ route, navigation }) {
@@ -47,19 +47,17 @@ export function TransactionsScreen({ route, navigation }) {
           sections={transactions}
           keyExtractor={(item, index) => item + index}
           renderSectionHeader={({section : { title }}) => (
-            <View style={styles.dateContainer}>
-              <Text style={styles.dateText}>{title}</Text>
-              <Text style={styles.dateText}>Amount</Text>
-              <Text style={styles.dateText}>Balance</Text>
+            <View style={styles.headerContainer}>
+              <Text style={[styles.dateHeader, styles.headerText]}>{title}</Text>
+              <Text style={[styles.amountHeader, styles.headerText]}>Amount</Text>
+              <Text style={[styles.balanceHeader, styles.headerText]}>Balance</Text>
             </View>
           )}
           renderItem={({item}) => (
-            <View style={styles.transactionContainer}>
-              <View style={styles.detailsContainer}>
-                <Text style={styles.descriptionText}>{item.details.description}</Text>
-                <Text style={styles.amountText}>{item.details.value.amount} ({item.details.value.currency})</Text>
-                <Text style={styles.newBalanceText}>{item.details.new_balance.amount}</Text>
-              </View>
+            <View style={styles.detailsContainer}>
+              <Text style={[styles.descriptionDetail, styles.detailsText]}>{item.details.description}</Text>
+              <Text style={[styles.amountDetail, styles.detailsText]}>{item.details.value.amount}{getCurrencySymbol(item.details.value.currency)}</Text>
+              <Text style={[styles.balanceDetail, styles.detailsText]}>{item.details.new_balance.amount}{getCurrencySymbol(item.details.new_balance.currency)}</Text>
             </View>
           )}
         />
@@ -68,47 +66,75 @@ export function TransactionsScreen({ route, navigation }) {
   );
 };
 
+function getCurrencySymbol(currency) {
+  switch (currency) {
+    case 'EUR':
+      return '€';
+    case 'GBP':
+      return '£';
+    case 'USD':
+      return '$';
+    case 'CHF':
+      return 'CHf';
+  }
+}
+
 const styles = StyleSheet.create({
     container: {
       flex: 1,
       alignItems: 'center',
-      backgroundColor: GREY_LIGHT
+      backgroundColor: GREY_EXTRA_LIGHT
     },
     transactionsContainer: {
-      backgroundColor: GREY_LIGHT,
       width: '100%',
     },
-    transactionContainer: {
-      alignSelf: 'center',
-      width: '97%',
-      marginVertical: '1%',
-      borderColor: GREY_MEDIUM,
-      borderWidth: 1,
-      borderTopWidth: 1.5,
-    },
-    dateContainer: {
-      flexDirection: 'row'
-    },
-    dateText: {
+    headerText: {
       fontSize: FONT_SIZE_STANDARD,
       fontWeight: FONT_WEIGHT_REGULAR
     },
-    descriptionText: {
-      fontSize: FONT_SIZE_STANDARD,
-      fontWeight: FONT_WEIGHT_REGULAR
+    headerContainer: {
+      flexDirection: 'row',
+      width: '100%',
+      marginTop: '2%',
+      paddingHorizontal: '1%',
     },
-    amountText: {
-      paddingLeft: '10%',
-      fontSize: FONT_SIZE_STANDARD,
-      fontWeight: FONT_WEIGHT_REGULAR
+    dateHeader: {
+      flex: 1.3,
+      textAlign: 'left',
+    },
+    amountHeader: {
+      flex: 1,
+      textAlign: 'right',
+    },
+    balanceHeader: {
+      flex: 1,
+      textAlign: 'right',
     },
     detailsContainer: {
-      flexDirection: 'row'
+      flexDirection: 'row',
+      borderColor: GREY_MEDIUM,
+      borderWidth: 1,
+      borderTopWidth: 0.5,
+      borderBottomWidth: 0.5,
+      backgroundColor: WHITE,
+      padding: '1%',
+      paddingVertical: '3%'
     },
-    newBalanceText: {
-      position: 'absolute',
-      right: 0,
+    detailsText: {
       fontSize: FONT_SIZE_STANDARD,
-      fontWeight: FONT_WEIGHT_REGULAR
+      fontWeight: FONT_WEIGHT_REGULAR,
+      color: GREY_DARK
+    },
+    descriptionDetail: {
+      flex: 1.3,
+      textAlign: 'left',
+    },
+    amountDetail: {
+      flex: 1,
+      textAlign: 'right',
+    },
+    balanceDetail: {
+      flex: 1,
+      textAlign: 'right',
     }
 });

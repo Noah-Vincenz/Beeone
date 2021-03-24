@@ -6,7 +6,7 @@ import { getAsyncStorage } from '../../util/StorageHelper';
 import { base_url, joinPath } from '../../util/ObpApiUtils';
 import { getLogoSourcePath, getRealBankName, getRealBankId } from '../../util/AccountUtils';
 import { GREY_LIGHT, WHITE, SECONDARY } from 'resources/styles/colours';
-import { BLACK, GREY_DARK, GREY_MEDIUM } from '../../resources/styles/colours';
+import { BLACK, GREY_DARK, GREY_MEDIUM, GREY_EXTRA_LIGHT } from '../../resources/styles/colours';
 
 export function StandingOrdersScreen({ route, navigation }) {
   const { fromAccount } = route.params;
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     container: {
       flex: 1,
       alignItems: 'center',
-      backgroundColor: GREY_LIGHT
+      backgroundColor: GREY_EXTRA_LIGHT
     },
     accountsContainer: {
       backgroundColor: GREY_LIGHT,

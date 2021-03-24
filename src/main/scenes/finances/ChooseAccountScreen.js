@@ -4,7 +4,7 @@ import { FONT_WEIGHT_BOLD, FONT_SIZE_HEADING, FONT_WEIGHT_REGULAR, FONT_SIZE_STA
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getAsyncStorage } from '../../util/StorageHelper';
 import { base_url, joinPath, getChallengeTypes, initiateTransactionRequest, answerChallenge } from '../../util/ObpApiUtils';
-import { GREY_LIGHT, GREY_MEDIUM, GREY_DARK, WHITE } from 'resources/styles/colours';
+import { GREY_LIGHT, GREY_MEDIUM, GREY_DARK, WHITE, GREY_EXTRA_LIGHT } from 'resources/styles/colours';
 import { StackActions } from '@react-navigation/native';
 import { getLogoSourcePath } from 'src/util/AccountUtils';
 
@@ -47,7 +47,7 @@ export function ChooseAccountScreen({ route, navigation }) {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: GREY_LIGHT,
+        backgroundColor: GREY_EXTRA_LIGHT,
         flex: 1,
         alignItems: 'center',
     },

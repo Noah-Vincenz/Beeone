@@ -122,7 +122,7 @@ export const getChallengeTypes = async (bankId, accountId, token) => {
     }
 }
   
-export const initiateTransactionRequest = async (senderBankId, senderAccountId, recipientBankId, recipientAccountId, challengeType, token, amountIn) => {
+export const initiateTransactionRequest = async (senderBankId, senderAccountId, recipientBankId, recipientAccountId, challengeType, token, amountIn, currencyIn) => {
     try {
         let response = await fetch(joinPath(base_url, `/obp/v4.0.0/banks/${senderBankId}/accounts/${senderAccountId}/owner/transaction-request-types/${challengeType}/transaction-requests`), {
             method: 'POST',
@@ -136,10 +136,10 @@ export const initiateTransactionRequest = async (senderBankId, senderAccountId, 
                     bank_id: recipientBankId
                 },
                 value: {
-                    currency: 'EUR',
+                    currency: currencyIn,
                     amount: amountIn
                 },
-                description: "Rent",
+                description: 'Internal Transfer',
                 challenge_type: challengeType
             })
         });

@@ -6,7 +6,7 @@ import { getAsyncStorage } from '../../util/StorageHelper';
 import { base_url, getBanks, joinPath } from '../../util/ObpApiUtils';
 import { getLogoSourcePath, getRealBankName } from '../../util/AccountUtils';
 import { GREY_LIGHT, WHITE, SECONDARY } from 'resources/styles/colours';
-import { BLACK, GREY_DARK, GREY_MEDIUM } from '../../resources/styles/colours';
+import { BLACK, GREY_DARK, GREY_MEDIUM, GREY_EXTRA_LIGHT } from '../../resources/styles/colours';
 
 export function AddAccountScreen({ navigation }) {
   const [isLoading, setLoading] = useState(true);
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
     container: {
       flex: 1,
       alignItems: 'center',
-      backgroundColor: GREY_LIGHT
+      backgroundColor: GREY_EXTRA_LIGHT
     },
     textInputStyle: {
       height: '8%',

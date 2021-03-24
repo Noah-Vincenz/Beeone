@@ -4,7 +4,7 @@ import { FONT_WEIGHT_BOLD, FONT_SIZE_HEADING, FONT_WEIGHT_REGULAR, FONT_SIZE_STA
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getAsyncStorage } from 'src/util/StorageHelper';
 import { base_url, joinPath, getChallengeTypes, initiateTransactionRequest, answerChallenge } from 'src/util/ObpApiUtils';
-import { GREY_LIGHT, BLACK, GREY_MEDIUM, GREY_DARK, GREEN_PARIS, WHITE, GREEN_SACRAMENTO } from 'resources/styles/colours';
+import { GREY_LIGHT, BLACK, GREY_MEDIUM, GREY_DARK, GREEN_PARIS, WHITE, GREEN_SACRAMENTO, GREY_EXTRA_LIGHT } from 'resources/styles/colours';
 import { StackActions } from '@react-navigation/native';
 import { getLogoSourcePath } from 'src/util/AccountUtils';
 import { RadioButton } from 'src/model/RadioButton.js';
@@ -167,7 +167,7 @@ export function TransferScreen({ route, navigation }) {
                     )}
                 </View>
                 <TouchableOpacity style={amount > 0 && toAccount != undefined ? styles.doneButtonEnabled : styles.doneButtonDisabled} disabled={amount == 0 || toAccount == undefined} onPress={() => {
-                    transfer(fromAccount.bank_id, fromAccount.id, toAccount.bank_id, toAccount.id, amount)
+                    transfer(fromAccount.bank_id, fromAccount.id, toAccount.bank_id, toAccount.id, amount, fromAccount.balance.currency)
                     // apply timeout to show updated account balances - unless transfer is taking longer than expected
                     // we could add another API call here to check for the status of the transaction request
                     setTimeout(navigation.goBack,
@@ -181,13 +181,13 @@ export function TransferScreen({ route, navigation }) {
     );
 };
 
-function transfer (fromBankId, fromAccountId, toBankId, toAccountId, amount) {
+function transfer (fromBankId, fromAccountId, toBankId, toAccountId, amount, currency) {
     getAsyncStorage('obpToken')
     .then((token) => {
         getChallengeTypes(fromBankId, fromAccountId, token)
         .then((challengeTypes) => {
             const challengeType = challengeTypes[0] // just gets first challenge type from available types
-            initiateTransactionRequest(fromBankId, fromAccountId, toBankId, toAccountId, challengeType, token, amount)
+            initiateTransactionRequest(fromBankId, fromAccountId, toBankId, toAccountId, challengeType, token, amount, currency)
             .then((initiateResponse) => {
                 if(initiateResponse.code != null && initiateResponse.code == 400 || initiateResponse.code == 404) {
                 console.error(initiateResponse)
@@ -217,7 +217,7 @@ function transfer (fromBankId, fromAccountId, toBankId, toAccountId, amount) {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: GREY_LIGHT,
+        backgroundColor: GREY_EXTRA_LIGHT,
         flex: 1,
     },
     scrollContainer: {
