@@ -55,7 +55,13 @@ export function TransactionsScreen({ route, navigation }) {
           )}
           renderItem={({item}) => (
             <View style={styles.detailsContainer}>
-              <Text style={[styles.descriptionDetail, styles.detailsText]}>{item.details.description}</Text>
+              <Text style={[styles.descriptionDetail, styles.detailsText]}>
+                {item.other_account.holder.name === "" ? (
+                  item.details.description // internal transfer between accounts
+                ) : (
+                  item.other_account.holder.name // external transfer
+                )}
+              </Text>
               <Text style={[styles.amountDetail, styles.detailsText]}>{item.details.value.amount}{getCurrencySymbol(item.details.value.currency)}</Text>
               <Text style={[styles.balanceDetail, styles.detailsText]}>{item.details.new_balance.amount}{getCurrencySymbol(item.details.new_balance.currency)}</Text>
             </View>

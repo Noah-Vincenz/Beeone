@@ -17,6 +17,7 @@ var PickerItem = Picker.Item;
 export function TransferScreen({ route, navigation }) {
     const { accountsList, fromAccount, toAccount } = route.params;
     const [amount, setAmount] = useState('');
+    const [reference, setReference] = useState('');
     const [transferType, setTransferType] = useState('');
     const [transferTypeList, setTransferTypeList] = useState([
         { id: 1, name: "One Off Payment", selected: true },
@@ -120,6 +121,14 @@ export function TransferScreen({ route, navigation }) {
                         onChangeText={setAmount}
                     />
                 </View>
+                <View style={styles.amountContainer}>
+                    <Text style={styles.inputViewText}>Reference</Text>
+                    <TextInput style={styles.inputViewTextInput}
+                        placeholder = 'Reference'
+                        value={reference}
+                        onChangeText={setReference}
+                    />
+                </View>
                 <View style={styles.standingOrderContainer}>
                     {transferTypeList.map((item) => (
                         <RadioButton
@@ -166,8 +175,8 @@ export function TransferScreen({ route, navigation }) {
                         </View>
                     )}
                 </View>
-                <TouchableOpacity style={amount > 0 && toAccount != undefined ? styles.doneButtonEnabled : styles.doneButtonDisabled} disabled={amount == 0 || toAccount == undefined} onPress={() => {
-                    transfer(fromAccount.bank_id, fromAccount.id, toAccount.bank_id, toAccount.id, amount, fromAccount.balance.currency)
+                <TouchableOpacity style={amount > 0 && toAccount != undefined && reference != '' ? styles.doneButtonEnabled : styles.doneButtonDisabled} disabled={amount == 0 || toAccount == undefined || reference == ''} onPress={() => {
+                    transfer(fromAccount.bank_id, fromAccount.id, toAccount.bank_id, toAccount.id, amount, fromAccount.balance.currency, reference)
                     // apply timeout to show updated account balances - unless transfer is taking longer than expected
                     // we could add another API call here to check for the status of the transaction request
                     setTimeout(navigation.goBack,
@@ -181,13 +190,13 @@ export function TransferScreen({ route, navigation }) {
     );
 };
 
-function transfer (fromBankId, fromAccountId, toBankId, toAccountId, amount, currency) {
+function transfer (fromBankId, fromAccountId, toBankId, toAccountId, amount, currency, description) {
     getAsyncStorage('obpToken')
     .then((token) => {
         getChallengeTypes(fromBankId, fromAccountId, token)
         .then((challengeTypes) => {
             const challengeType = challengeTypes[0] // just gets first challenge type from available types
-            initiateTransactionRequest(fromBankId, fromAccountId, toBankId, toAccountId, challengeType, token, amount, currency)
+            initiateTransactionRequest(fromBankId, fromAccountId, toBankId, toAccountId, challengeType, token, amount, currency, description)
             .then((initiateResponse) => {
                 if(initiateResponse.code != null && initiateResponse.code == 400 || initiateResponse.code == 404) {
                 console.error(initiateResponse)
@@ -232,7 +241,6 @@ const styles = StyleSheet.create({
         marginBottom: '0.5%',
         borderColor: GREY_MEDIUM,
         borderWidth: 1,
-        borderTopWidth: 1.5,
     },
     accountContainerTop: {
         flexDirection: 'row',
@@ -270,7 +278,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderColor: GREY_MEDIUM,
         borderWidth: 1,
-        borderTopWidth: 1.5,
         marginBottom: '0.5%',
     },
     standingOrderContainer: {
@@ -279,7 +286,6 @@ const styles = StyleSheet.create({
         width: '97%',
         borderColor: GREY_MEDIUM,
         borderWidth: 1,
-        borderTopWidth: 1.5,
     },
     inputView: {
         paddingTop: '2%',

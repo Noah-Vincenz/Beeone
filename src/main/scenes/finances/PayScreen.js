@@ -170,7 +170,7 @@ export function PayScreen({ route, navigation }) {
                         </View>
                     )}
                 </View>
-                <TouchableOpacity style={amount > 0 && counterParty != undefined ? styles.doneButtonEnabled : styles.doneButtonDisabled} disabled={amount == 0 || counterParty == undefined} onPress={() => {
+                <TouchableOpacity style={amount > 0 && counterParty != undefined && reference != '' ? styles.doneButtonEnabled : styles.doneButtonDisabled} disabled={amount == 0 || counterParty == undefined || reference == ''} onPress={() => {
                     transfer(fromAccount.bank_id, fromAccount.id, counterParty.counterparty_id, reference, amount);
                     // apply timeout to show updated account balances - unless transfer is taking longer than expected
                     // we could add another API call here to check for the status of the transaction request
@@ -236,7 +236,6 @@ const styles = StyleSheet.create({
         marginBottom: '0.5%',
         borderColor: GREY_MEDIUM,
         borderWidth: 1,
-        borderTopWidth: 1.5,
     },
     accountContainerTop: {
         flexDirection: 'row',
@@ -273,7 +272,6 @@ const styles = StyleSheet.create({
         marginVertical: '0.5%',
         borderColor: GREY_MEDIUM,
         borderWidth: 1,
-        borderTopWidth: 1.5,
     },
     counterPartyContainerTop: {
         flexDirection: 'row',
@@ -303,7 +301,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderColor: GREY_MEDIUM,
         borderWidth: 1,
-        borderTopWidth: 1.5,
         marginBottom: '0.5%',
     },
     standingOrderContainer: {
@@ -312,7 +309,6 @@ const styles = StyleSheet.create({
         width: '97%',
         borderColor: GREY_MEDIUM,
         borderWidth: 1,
-        borderTopWidth: 1.5,
     },
     inputView: {
         paddingTop: '2%',
