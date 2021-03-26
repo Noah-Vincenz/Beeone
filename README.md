@@ -19,7 +19,7 @@
 
 - Install packages with `yarn` or `npm install`.
   - If you have native iOS code run `npx pod-install`
-- Run `yarn start` to start the bundler.
+- Run `CONSUMER_KEY=<OBP_API_CONSUMER_KEY> npm start --reset-cache`, where OBP_API_CONSUMER_KEY is your Open Bank Project sandbox consumer key that you can retrieve via registering [here](https://apisandbox.openbankproject.com/user_mgt/login?F135931087425QVWFMP=_). This will start the bundler.
 - Open the project in a React runtime to try it:
   - iOS: [Client iOS](https://itunes.apple.com/app/apple-store/id982107779)
   - Android: [Client Android](https://play.google.com/store/apps/details?id=host.exp.exponent&referrer=blankexample)
