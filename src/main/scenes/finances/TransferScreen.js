@@ -196,7 +196,7 @@ function transfer (fromBankId, fromAccountId, toBankId, toAccountId, amount, cur
         getChallengeTypes(fromBankId, fromAccountId, token)
         .then((challengeTypes) => {
             const challengeType = challengeTypes[0] // just gets first challenge type from available types
-            initiateTransactionRequest(fromBankId, fromAccountId, toBankId, toAccountId, challengeType, token, amount, currency, description)
+            initiateTransactionRequest(fromBankId, fromAccountId, toBankId, toAccountId, challengeType, token, amount, currency, description) // TODO: can get receiving account label here and change description
             .then((initiateResponse) => {
                 if(initiateResponse.code != null && initiateResponse.code == 400 || initiateResponse.code == 404) {
                 console.error(initiateResponse)

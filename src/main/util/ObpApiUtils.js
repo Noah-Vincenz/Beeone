@@ -139,7 +139,7 @@ export const initiateTransactionRequest = async (senderBankId, senderAccountId, 
                     currency: currencyIn,
                     amount: amountIn
                 },
-                description: descriptionIn == '' ? 'Internal Transfer' : descriptionIn, // maybe add description in here or other bank label
+                description: descriptionIn, // maybe add description in here or receiving bank label; need to check whether receiving money (get sender details) or sending money (get recipient details)
                 challenge_type: challengeType
             })
         });

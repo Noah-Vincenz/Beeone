@@ -43,7 +43,7 @@ const HomeNavStack = () => {
           headerLeft: () => (
             <TouchableOpacity style={styles.signOutButton} onPress={signOut}>
               <Image
-                source={require('resources/img/profile-icon.png')}
+                source={require('resources/img/profile.png')}
                 style={styles.signOutButtonImg}
               />
             </TouchableOpacity>
@@ -51,7 +51,7 @@ const HomeNavStack = () => {
           headerRight: () => (
             <TouchableOpacity style={styles.messagesButton}>
               <Image
-                source={require('resources/img/message-icon.png')}
+                source={require('resources/img/comu.png')}
                 style={styles.messagesButtonImg}
               />
             </TouchableOpacity>
@@ -90,7 +90,7 @@ const FinancesNavStack = () => {
         headerLeft: () => (
           <TouchableOpacity style={styles.signOutButton} onPress={signOut}>
             <Image
-              source={require('resources/img/profile-icon.png')}
+              source={require('resources/img/profile.png')}
               style={styles.signOutButtonImg}
             />
           </TouchableOpacity>
@@ -98,7 +98,7 @@ const FinancesNavStack = () => {
         headerRight: () => (
           <TouchableOpacity style={styles.messagesButton}>
             <Image
-              source={require('resources/img/message-icon.png')}
+              source={require('resources/img/comu.png')}
               style={styles.messagesButtonImg}
             />
           </TouchableOpacity>
@@ -124,7 +124,7 @@ const ImpactNavStack = () => {
           headerLeft: () => (
             <TouchableOpacity style={styles.signOutButton} onPress={signOut}>
               <Image
-                source={require('resources/img/profile-icon.png')}
+                source={require('resources/img/profile.png')}
                 style={styles.signOutButtonImg}
               />
             </TouchableOpacity>
@@ -132,7 +132,7 @@ const ImpactNavStack = () => {
           headerRight: () => (
             <TouchableOpacity style={styles.messagesButton}>
               <Image
-                source={require('resources/img/message-icon.png')}
+                source={require('resources/img/comu.png')}
                 style={styles.messagesButtonImg}
               />
             </TouchableOpacity>
@@ -151,7 +151,7 @@ const GoalsNavStack = () => {
         headerLeft: () => (
           <TouchableOpacity style={styles.signOutButton} onPress={signOut}>
             <Image
-              source={require('resources/img/profile-icon.png')}
+              source={require('resources/img/profile.png')}
               style={styles.signOutButtonImg}
             />
           </TouchableOpacity>
@@ -159,7 +159,7 @@ const GoalsNavStack = () => {
         headerRight: () => (
           <TouchableOpacity style={styles.messagesButton}>
             <Image
-              source={require('resources/img/message-icon.png')}
+              source={require('resources/img/comu.png')}
               style={styles.messagesButtonImg}
             />
           </TouchableOpacity>
