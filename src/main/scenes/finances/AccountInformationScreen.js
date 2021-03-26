@@ -99,7 +99,6 @@ const styles = StyleSheet.create({
       marginVertical: '1%',
       borderColor: GREY_DARK,
       borderWidth: 1,
-      borderTopWidth: 1.5,
       backgroundColor: WHITE,
     },
     accountContainerTop: {
@@ -148,7 +147,6 @@ const styles = StyleSheet.create({
       margin: '0.5%',
       borderColor: GREY_MEDIUM,
       borderWidth: 1,
-      borderTopWidth: 1.5,
       paddingVertical: '4%',
       paddingLeft: '2%',
       flexDirection: 'row'

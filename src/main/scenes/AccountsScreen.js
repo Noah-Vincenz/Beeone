@@ -133,7 +133,6 @@ const styles = StyleSheet.create({
       marginVertical: '1%',
       borderColor: GREY_DARK,
       borderWidth: 1,
-      borderTopWidth: 1.5,
     },
     accountContainerTop: {
       flexDirection: 'row',
@@ -184,7 +183,8 @@ const styles = StyleSheet.create({
       padding: '2%',
       backgroundColor: WHITE,
       borderColor: GREY_MEDIUM,
-      borderWidth: 0.5,
+      borderWidth: 1,
+      borderBottomWidth: 0
     },
     payTransferButtonText: {
       color: GREY_DARK,
