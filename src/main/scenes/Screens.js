@@ -22,46 +22,57 @@ import { PayScreen } from './finances/PayScreen.js';
 import { AccountInformationScreen } from './finances/AccountInformationScreen.js';
 import { StackActions } from '@react-navigation/native';
 import { ImpactScreen } from './ImpactScreen';
+import { SafeScreen } from './SafeScreen';
 import { AccountsScreen } from './AccountsScreen';
 import { HomeScreen } from './HomeScreen';
 import { MyContext } from '../util/Context';
+import { Ionicons } from '@expo/vector-icons';
 
 const HomeStack = createStackNavigator();
 const TransferStack = createStackNavigator();
 const PayStack = createStackNavigator();
 const FinancesStack = createStackNavigator();
 const ImpactStack = createStackNavigator();
+const SafeStack = createStackNavigator();
 const GoalsStack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
+const LeftHeader = () => {
+  const { signOut } = React.useContext(MyContext);
+  return (
+    <TouchableOpacity style={styles.signOutButton} onPress={signOut}>
+      <Image
+        source={require('resources/img/profile.png')}
+        style={styles.signOutButtonImg}
+      />
+    </TouchableOpacity>
+  );
+};
+
+const RightHeader = () => {
+  return (
+    <TouchableOpacity style={styles.messagesButton}>
+      <Image
+        source={require('resources/img/comu.png')}
+        style={styles.messagesButtonImg}
+      />
+    </TouchableOpacity>
+  );
+};
+
 // Home Screens
 const HomeNavStack = () => {
-  const { signOut } = React.useContext(MyContext);
   return (
     <HomeStack.Navigator initialRouteName="Home">
       <HomeStack.Screen name="Home" component={HomeScreen} options={{
-          headerLeft: () => (
-            <TouchableOpacity style={styles.signOutButton} onPress={signOut}>
-              <Image
-                source={require('resources/img/profile.png')}
-                style={styles.signOutButtonImg}
-              />
-            </TouchableOpacity>
-          ),
-          headerRight: () => (
-            <TouchableOpacity style={styles.messagesButton}>
-              <Image
-                source={require('resources/img/comu.png')}
-                style={styles.messagesButtonImg}
-              />
-            </TouchableOpacity>
-          )
+        headerLeft: LeftHeader,
+        headerRight: RightHeader
       }}/>
     </HomeStack.Navigator>
   );
 }
 
-// Finances Screens
+// Finances Screen
 const TransferNavStack = () => {
   return (
     <TransferStack.Navigator mode="modal" initialRouteName="Transfer between accounts">
@@ -71,6 +82,7 @@ const TransferNavStack = () => {
   );
 }
 
+// Finances Screen
 const PayNavStack = () => {
   const navigation = useNavigation()
   return (
@@ -82,27 +94,13 @@ const PayNavStack = () => {
   );
 }
 
+// Finances Screens
 const FinancesNavStack = () => {
-  const { signOut } = React.useContext(MyContext);
   return (
     <FinancesStack.Navigator initialRouteName="Finances">
       <FinancesStack.Screen name="Finances" component={AccountsScreen} options={{
-        headerLeft: () => (
-          <TouchableOpacity style={styles.signOutButton} onPress={signOut}>
-            <Image
-              source={require('resources/img/profile.png')}
-              style={styles.signOutButtonImg}
-            />
-          </TouchableOpacity>
-        ),
-        headerRight: () => (
-          <TouchableOpacity style={styles.messagesButton}>
-            <Image
-              source={require('resources/img/comu.png')}
-              style={styles.messagesButtonImg}
-            />
-          </TouchableOpacity>
-        )
+        headerLeft: LeftHeader,
+        headerRight: RightHeader
       }}/>
       <FinancesStack.Screen name="Add Account" component={AddAccountScreen}/>
       <FinancesStack.Screen name="Transfer between accounts" component={TransferNavStack} options={{ headerShown: false }}/>
@@ -117,26 +115,11 @@ const FinancesNavStack = () => {
 
 // Impact Screens
 const ImpactNavStack = () => {
-  const { signOut } = React.useContext(MyContext);
   return (
     <ImpactStack.Navigator initialRouteName="Impact">
         <ImpactStack.Screen name="Impact" component={ImpactScreen} options={{
-          headerLeft: () => (
-            <TouchableOpacity style={styles.signOutButton} onPress={signOut}>
-              <Image
-                source={require('resources/img/profile.png')}
-                style={styles.signOutButtonImg}
-              />
-            </TouchableOpacity>
-          ),
-          headerRight: () => (
-            <TouchableOpacity style={styles.messagesButton}>
-              <Image
-                source={require('resources/img/comu.png')}
-                style={styles.messagesButtonImg}
-              />
-            </TouchableOpacity>
-          )
+          headerLeft: LeftHeader,
+          headerRight: RightHeader
         }}/>
     </ImpactStack.Navigator>
   );
@@ -144,46 +127,63 @@ const ImpactNavStack = () => {
 
 // Goals Screens
 const GoalsNavStack = () => {
-  const { signOut } = React.useContext(MyContext);
   return (
     <GoalsStack.Navigator initialRouteName="Goals">
       <GoalsStack.Screen name="Goals" component={GoalsScreen} options={{
-        headerLeft: () => (
-          <TouchableOpacity style={styles.signOutButton} onPress={signOut}>
-            <Image
-              source={require('resources/img/profile.png')}
-              style={styles.signOutButtonImg}
-            />
-          </TouchableOpacity>
-        ),
-        headerRight: () => (
-          <TouchableOpacity style={styles.messagesButton}>
-            <Image
-              source={require('resources/img/comu.png')}
-              style={styles.messagesButtonImg}
-            />
-          </TouchableOpacity>
-        )
+        headerLeft: LeftHeader,
+        headerRight: RightHeader
       }}/>
       <GoalsStack.Screen name="Add Category" component={AddCategoryScreen}/>
     </GoalsStack.Navigator>
   );
 }
 
+// Safe Screens
+const SafeNavStack = () => {
+  return (
+    <SafeStack.Navigator initialRouteName="Safe">
+      <SafeStack.Screen name="Safe" component={SafeScreen} options={{
+        headerLeft: LeftHeader,
+        headerRight: RightHeader
+      }}/>
+    </SafeStack.Navigator>
+  );
+}
+
 // Tab navigator for all screens
 export function ScreensTabNavigator() {
   return (
-    <Tab.Navigator initialRouteName="Finances" tabBarOptions={{
+    <Tab.Navigator initialRouteName="Finances" 
+      tabBarOptions={{
         activeTintColor: GREEN_PARIS,
         inactiveTintColor: GREY_LIGHT,
         labelStyle: {
           fontSize: FONT_SIZE_SMALL
         },
-    }}>
+      }}
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
+          if (route.name == 'Home') {
+            iconName = focused ? require('resources/img/home.png') : require('resources/img/home-gr.png');
+          } else if (route.name == 'Finances') {
+            iconName = focused ? require('resources/img/finances.png') : require('resources/img/finances-gr.png');
+          } else if (route.name == 'Impact') {
+            iconName = focused ? require('resources/img/impact.png') : require('resources/img/impact-gr.png');
+          } else if (route.name == 'Goals') {
+            iconName = focused ? require('resources/img/goals.png') : require('resources/img/goals-gr.png');
+          } else if (route.name == 'Safe') {
+            iconName = focused ? require('resources/img/safe.png') : require('resources/img/safe-gr.png');
+          }
+          return <Image source={iconName} style={styles.tabIconImg}/>;
+        },
+      })}
+    >
       <Tab.Screen name="Home" component={HomeNavStack}/>
       <Tab.Screen name="Finances" component={FinancesNavStack}/>
       <Tab.Screen name="Impact" component={ImpactNavStack}/>
       <Tab.Screen name="Goals" component={GoalsNavStack}/>
+      <Tab.Screen name="Safe" component={SafeNavStack}/>
     </Tab.Navigator>
   );
 }
@@ -207,4 +207,9 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
   },
+  tabIconImg: {
+    marginTop: '3%',
+    flex: 1,
+    resizeMode: 'contain',
+  }
 })
