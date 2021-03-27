@@ -27,6 +27,7 @@ import { AccountsScreen } from './AccountsScreen';
 import { HomeScreen } from './HomeScreen';
 import { MyContext } from '../util/Context';
 import { Ionicons } from '@expo/vector-icons';
+import { FONT_SIZE_STANDARD_LARGE } from '../resources/styles/typography';
 
 const HomeStack = createStackNavigator();
 const TransferStack = createStackNavigator();
@@ -66,7 +67,10 @@ const HomeNavStack = () => {
     <HomeStack.Navigator initialRouteName="Home">
       <HomeStack.Screen name="Home" component={HomeScreen} options={{
         headerLeft: LeftHeader,
-        headerRight: RightHeader
+        headerRight: RightHeader,
+        headerTitleStyle: {
+          fontSize: FONT_SIZE_STANDARD_LARGE
+        }
       }}/>
     </HomeStack.Navigator>
   );
@@ -76,8 +80,16 @@ const HomeNavStack = () => {
 const TransferNavStack = () => {
   return (
     <TransferStack.Navigator mode="modal" initialRouteName="Transfer between accounts">
-      <TransferStack.Screen name="Transfer between accounts" component={TransferScreen}/>
-      <TransferStack.Screen name="Choose account" component={ChooseAccountScreen}/>
+      <TransferStack.Screen name="Transfer between accounts" component={TransferScreen} options={{
+        headerTitleStyle: {
+          fontSize: FONT_SIZE_SMALL
+        }
+      }}/>
+      <TransferStack.Screen name="Choose account" component={ChooseAccountScreen} options={{
+        headerTitleStyle: {
+          fontSize: FONT_SIZE_SMALL
+        }
+      }}/>
     </TransferStack.Navigator>
   );
 }
@@ -87,9 +99,21 @@ const PayNavStack = () => {
   const navigation = useNavigation()
   return (
     <PayStack.Navigator mode="modal" initialRouteName="Make a payment">
-      <PayStack.Screen name="Make a payment" component={PayScreen}/>
-      <PayStack.Screen name="Select recipient" component={SelectRecipientScreen}/>
-      <PayStack.Screen name="Pay someone new" component={PaySomeoneNewScreen}/>
+      <PayStack.Screen name="Make a payment" component={PayScreen} options={{
+        headerTitleStyle: {
+          fontSize: FONT_SIZE_SMALL
+        }
+      }}/>
+      <PayStack.Screen name="Select recipient" component={SelectRecipientScreen} options={{
+        headerTitleStyle: {
+          fontSize: FONT_SIZE_SMALL
+        }
+      }}/>
+      <PayStack.Screen name="Pay someone new" component={PaySomeoneNewScreen} options={{
+        headerTitleStyle: {
+          fontSize: FONT_SIZE_SMALL
+        }
+      }}/>
     </PayStack.Navigator>
   );
 }
@@ -100,15 +124,38 @@ const FinancesNavStack = () => {
     <FinancesStack.Navigator initialRouteName="Finances">
       <FinancesStack.Screen name="Finances" component={AccountsScreen} options={{
         headerLeft: LeftHeader,
-        headerRight: RightHeader
+        headerRight: RightHeader,
+        headerTitleStyle: {
+          fontSize: FONT_SIZE_STANDARD_LARGE
+        }
       }}/>
-      <FinancesStack.Screen name="Add Account" component={AddAccountScreen}/>
+      <FinancesStack.Screen name="Add Account" component={AddAccountScreen} options={{
+        headerTitleStyle: {
+          fontSize: FONT_SIZE_SMALL
+        }
+      }}/>
       <FinancesStack.Screen name="Transfer between accounts" component={TransferNavStack} options={{ headerShown: false }}/>
       <FinancesStack.Screen name="Make a payment" component={PayNavStack} options={{ headerShown: false }}/>
-      <FinancesStack.Screen name="Account Information" component={AccountInformationScreen}/>
-      <FinancesStack.Screen name="Transactions" component={TransactionsScreen}/>
-      <FinancesStack.Screen name="Direct Debits" component={DirectDebitsScreen}/>
-      <FinancesStack.Screen name="Standing Orders" component={StandingOrdersScreen}/>
+      <FinancesStack.Screen name="Account Information" component={AccountInformationScreen} options={{
+        headerTitleStyle: {
+          fontSize: FONT_SIZE_SMALL
+        }
+      }}/>
+      <FinancesStack.Screen name="Transactions" component={TransactionsScreen} options={{
+        headerTitleStyle: {
+          fontSize: FONT_SIZE_SMALL
+        }
+      }}/>
+      <FinancesStack.Screen name="Direct Debits" component={DirectDebitsScreen} options={{
+        headerTitleStyle: {
+          fontSize: FONT_SIZE_SMALL
+        }
+      }}/>
+      <FinancesStack.Screen name="Standing Orders" component={StandingOrdersScreen} options={{
+        headerTitleStyle: {
+          fontSize: FONT_SIZE_SMALL
+        }
+      }}/>
     </FinancesStack.Navigator>
   );
 }
@@ -119,7 +166,10 @@ const ImpactNavStack = () => {
     <ImpactStack.Navigator initialRouteName="Impact">
         <ImpactStack.Screen name="Impact" component={ImpactScreen} options={{
           headerLeft: LeftHeader,
-          headerRight: RightHeader
+          headerRight: RightHeader,
+          headerTitleStyle: {
+            fontSize: FONT_SIZE_STANDARD_LARGE
+          }
         }}/>
     </ImpactStack.Navigator>
   );
@@ -131,7 +181,10 @@ const GoalsNavStack = () => {
     <GoalsStack.Navigator initialRouteName="Goals">
       <GoalsStack.Screen name="Goals" component={GoalsScreen} options={{
         headerLeft: LeftHeader,
-        headerRight: RightHeader
+        headerRight: RightHeader,
+        headerTitleStyle: {
+          fontSize: FONT_SIZE_STANDARD_LARGE
+        }
       }}/>
       <GoalsStack.Screen name="Add Category" component={AddCategoryScreen}/>
     </GoalsStack.Navigator>
@@ -144,7 +197,10 @@ const SafeNavStack = () => {
     <SafeStack.Navigator initialRouteName="Safe">
       <SafeStack.Screen name="Safe" component={SafeScreen} options={{
         headerLeft: LeftHeader,
-        headerRight: RightHeader
+        headerRight: RightHeader,
+        headerTitleStyle: {
+          fontSize: FONT_SIZE_STANDARD_LARGE
+        }
       }}/>
     </SafeStack.Navigator>
   );

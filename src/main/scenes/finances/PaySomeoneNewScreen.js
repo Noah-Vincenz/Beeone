@@ -143,7 +143,6 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
     },
     dropDownLabel: {
-        fontWeight: FONT_WEIGHT_REGULAR,
         fontSize: FONT_SIZE_SMALL,
         color: GREY_DARK
     },
@@ -171,13 +170,11 @@ const styles = StyleSheet.create({
     },
     toggleButtonTextNormal: {
         alignSelf: 'center',
-        fontWeight: FONT_WEIGHT_REGULAR,
         fontSize: FONT_SIZE_SMALL,
         color: GREY_DARK
     },
     toggleButtonTextPressed: {
         alignSelf: 'center',
-        fontWeight: FONT_WEIGHT_REGULAR,
         fontSize: FONT_SIZE_SMALL,
         color: WHITE
     },
@@ -200,7 +197,6 @@ const styles = StyleSheet.create({
     createButtonText: {
         color: WHITE,
         textAlign: 'center',
-        fontWeight: FONT_WEIGHT_REGULAR,
         fontSize: FONT_SIZE_HEADING
     }
 });
