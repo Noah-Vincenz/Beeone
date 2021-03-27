@@ -175,7 +175,6 @@ const styles = StyleSheet.create({
     addAccountButtonText: {
       color: WHITE,
       textAlign: 'center',
-      fontWeight: FONT_WEIGHT_REGULAR,
       fontSize: FONT_SIZE_HEADING
     },
     payTransferButton: {
@@ -189,16 +188,11 @@ const styles = StyleSheet.create({
     payTransferButtonText: {
       color: GREY_DARK,
       textAlign: 'center',
-      fontWeight: FONT_WEIGHT_REGULAR,
-      fontSize: FONT_SIZE_STANDARD
     },
     accountContainerTopText: {
-      fontWeight: FONT_WEIGHT_REGULAR,
-      fontSize: FONT_SIZE_STANDARD,
       color: GREY_DARK
     },
     accountContainerMiddleText: {
-      fontWeight: FONT_WEIGHT_REGULAR,
       fontSize: FONT_SIZE_SMALL,
       color: GREY_DARK
     }

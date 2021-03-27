@@ -122,7 +122,6 @@ const styles = StyleSheet.create({
       marginBottom: '2%'
     },
     schemesContainerText: {
-      fontWeight: FONT_WEIGHT_REGULAR,
       fontSize: FONT_SIZE_SMALL,
       color: GREY_DARK
     },
@@ -131,13 +130,10 @@ const styles = StyleSheet.create({
       padding: '1%',
     },
     accountContainerMiddleText: {
-      fontWeight: FONT_WEIGHT_REGULAR,
       fontSize: FONT_SIZE_SMALL,
       color: GREY_DARK
     },
     accountContainerTopText: {
-      fontWeight: FONT_WEIGHT_REGULAR,
-      fontSize: FONT_SIZE_STANDARD,
       color: GREY_DARK
     },
     buttonContainer: {
@@ -152,8 +148,6 @@ const styles = StyleSheet.create({
       flexDirection: 'row'
     },
     buttonText: {
-      fontWeight: FONT_WEIGHT_REGULAR,
-      fontSize: FONT_SIZE_STANDARD,
       color: GREY_DARK
     },
     buttonIcon: {

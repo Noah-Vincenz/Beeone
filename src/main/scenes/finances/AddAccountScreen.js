@@ -105,7 +105,6 @@ const styles = StyleSheet.create({
       width: '97%',
       paddingLeft: 10,
       margin: 5,
-      fontSize: FONT_SIZE_STANDARD,
       borderColor: GREY_MEDIUM,
       borderWidth: 1,
       borderTopWidth: 1.5,
@@ -137,8 +136,6 @@ const styles = StyleSheet.create({
       justifyContent: 'center'
     },
     accountContainerText: {
-      fontWeight: FONT_WEIGHT_REGULAR,
-      fontSize: FONT_SIZE_STANDARD,
       color: BLACK,
       textAlign: 'center'
     },

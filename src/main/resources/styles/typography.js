@@ -7,4 +7,4 @@ export const FONT_SIZE_LOGO = 50;
 export const FONT_SIZE_HEADING = 45;
 export const FONT_SIZE_STANDARD_LARGE = 35;
 export const FONT_SIZE_STANDARD = 25;
-export const FONT_SIZE_SMALL = 22;
+export const FONT_SIZE_SMALL = 19;

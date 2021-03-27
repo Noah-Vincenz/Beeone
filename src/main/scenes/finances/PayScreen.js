@@ -257,12 +257,9 @@ const styles = StyleSheet.create({
         paddingBottom: '2%'
     },
     accountContainerTopText: {
-        fontWeight: FONT_WEIGHT_REGULAR,
-        fontSize: FONT_SIZE_STANDARD,
         color: GREY_DARK
     },
     accountContainerMiddleText: {
-        fontWeight: FONT_WEIGHT_REGULAR,
         fontSize: FONT_SIZE_SMALL,
         color: GREY_DARK
     },
@@ -284,12 +281,9 @@ const styles = StyleSheet.create({
         padding: '1%',
     },
     counterPartyContainerTopText: {
-        fontWeight: FONT_WEIGHT_REGULAR,
-        fontSize: FONT_SIZE_STANDARD,
         color: GREY_DARK
     },
     counterPartyContainerMiddleText: {
-        fontWeight: FONT_WEIGHT_REGULAR,
         fontSize: FONT_SIZE_SMALL,
         color: GREY_DARK
     },
@@ -324,7 +318,6 @@ const styles = StyleSheet.create({
     },
     inputViewTextInput: {
         width: '100%',
-        fontWeight: FONT_WEIGHT_REGULAR,
         fontSize: FONT_SIZE_STANDARD_LARGE,
         color: GREY_DARK,
         alignSelf: 'flex-start',
@@ -335,7 +328,6 @@ const styles = StyleSheet.create({
     },
     frequencyPickerItem: {
         color: BLACK,
-        fontSize: FONT_SIZE_STANDARD,
         height: '100%',
     },
     doneButtonEnabled: {

@@ -208,7 +208,7 @@ const styles = StyleSheet.create({
     height: 40,
   },
   tabIconImg: {
-    marginTop: '3%',
+    marginTop: '1.5%',
     flex: 1,
     resizeMode: 'contain',
   }

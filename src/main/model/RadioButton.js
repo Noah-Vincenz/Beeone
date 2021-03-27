@@ -42,8 +42,6 @@ const styles = StyleSheet.create({
         backgroundColor: GREEN_PARIS
     },
     radioButtonText: {
-        fontWeight: FONT_WEIGHT_REGULAR,
-        fontSize: FONT_SIZE_STANDARD,
         color: GREY_DARK,
         marginLeft: '4%'
     }

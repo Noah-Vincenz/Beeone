@@ -124,8 +124,6 @@ const styles = StyleSheet.create({
         padding: '2%'
     },
     textInput: {
-        fontWeight: FONT_WEIGHT_REGULAR,
-        fontSize: FONT_SIZE_STANDARD,
         color: GREY_DARK,
     },
     currencyContainer: {
@@ -135,7 +133,6 @@ const styles = StyleSheet.create({
         zIndex: 1
     },
     currencyText: {
-        fontWeight: FONT_WEIGHT_REGULAR,
         fontSize: FONT_SIZE_SMALL,
         color: GREY_DARK
     },

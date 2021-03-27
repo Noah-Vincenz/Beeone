@@ -95,8 +95,6 @@ const styles = StyleSheet.create({
       width: '100%',
     },
     headerText: {
-      fontSize: FONT_SIZE_STANDARD,
-      fontWeight: FONT_WEIGHT_REGULAR
     },
     headerContainer: {
       flexDirection: 'row',
@@ -127,8 +125,6 @@ const styles = StyleSheet.create({
       paddingVertical: '3%'
     },
     detailsText: {
-      fontSize: FONT_SIZE_STANDARD,
-      fontWeight: FONT_WEIGHT_REGULAR,
       color: GREY_DARK
     },
     descriptionDetail: {

@@ -14,9 +14,9 @@ import { getAsyncStorage, setAsyncStorage } from 'src/util/StorageHelper.js'
 import { removeAsyncStorage } from 'src/util/StorageHelper';
 import { Screens } from 'src/scenes/Screens.js';
 import { ScreensTabNavigator } from './src/main/scenes/Screens';
-import { GREEN_MINT, GREY_EXTRA_LIGHT } from './src/main/resources/styles/colours';
 import { setCustomTextInput, setCustomText } from 'react-native-global-props';
 import * as Font from 'expo-font';
+import { FONT_SIZE_STANDARD, FONT_WEIGHT_REGULAR } from './src/main/resources/styles/typography';
 
 const Stack = createStackNavigator();
 
@@ -32,7 +32,9 @@ export default App = () => {
       .then(() => {
         const customTextProps = {
           style: {
-            fontFamily: 'Netto'
+            fontFamily: 'Netto',
+            fontSize: FONT_SIZE_STANDARD,
+            fontWeight: FONT_WEIGHT_REGULAR
           }
         };
         setCustomText(customTextProps);

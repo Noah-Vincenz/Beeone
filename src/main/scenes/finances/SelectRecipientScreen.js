@@ -100,8 +100,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     paySomeoneNewText: {
-        fontWeight: FONT_WEIGHT_REGULAR,
-        fontSize: FONT_SIZE_STANDARD,
         color: GREY_DARK
     },
     paySomeoneNewIcon: {
@@ -131,12 +129,9 @@ const styles = StyleSheet.create({
         padding: '1%',
     },
     counterPartyContainerTopText: {
-        fontWeight: FONT_WEIGHT_REGULAR,
-        fontSize: FONT_SIZE_STANDARD,
         color: GREY_DARK
     },
     counterPartyContainerMiddleText: {
-        fontWeight: FONT_WEIGHT_REGULAR,
         fontSize: FONT_SIZE_SMALL,
         color: GREY_DARK
     }

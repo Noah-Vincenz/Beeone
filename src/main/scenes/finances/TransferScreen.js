@@ -261,12 +261,9 @@ const styles = StyleSheet.create({
         paddingBottom: '2%'
     },
     accountContainerTopText: {
-        fontWeight: FONT_WEIGHT_REGULAR,
-        fontSize: FONT_SIZE_STANDARD,
         color: GREY_DARK
     },
     accountContainerMiddleText: {
-        fontWeight: FONT_WEIGHT_REGULAR,
         fontSize: FONT_SIZE_SMALL,
         color: GREY_DARK
     },
@@ -293,7 +290,6 @@ const styles = StyleSheet.create({
         backgroundColor: GREY_MEDIUM
     },
     inputViewText: {
-        fontWeight: FONT_WEIGHT_REGULAR,
         fontSize: FONT_SIZE_SMALL,
         color: GREY_MEDIUM,
         alignSelf: 'flex-start',
@@ -301,7 +297,6 @@ const styles = StyleSheet.create({
     },
     inputViewTextInput: {
         width: '100%',
-        fontWeight: FONT_WEIGHT_REGULAR,
         fontSize: FONT_SIZE_STANDARD_LARGE,
         color: GREY_DARK,
         alignSelf: 'flex-start',
@@ -312,7 +307,6 @@ const styles = StyleSheet.create({
     },
     frequencyPickerItem: {
         color: BLACK,
-        fontSize: FONT_SIZE_STANDARD,
         height: '100%',
     },
     doneButtonEnabled: {
@@ -334,7 +328,6 @@ const styles = StyleSheet.create({
     doneButtonText: {
         color: WHITE,
         textAlign: 'center',
-        fontWeight: FONT_WEIGHT_REGULAR,
         fontSize: FONT_SIZE_HEADING
     }
 });

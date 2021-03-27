@@ -82,12 +82,9 @@ const styles = StyleSheet.create({
         padding: '1%',
     },
     accountContainerTopText: {
-        fontWeight: FONT_WEIGHT_REGULAR,
-        fontSize: FONT_SIZE_STANDARD,
         color: GREY_DARK
     },
     accountContainerMiddleText: {
-        fontWeight: FONT_WEIGHT_REGULAR,
         fontSize: FONT_SIZE_SMALL,
         color: GREY_DARK
     }
