@@ -7,12 +7,7 @@ export function GoalsScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <View style={styles.mainContainer}>
-        <Text>...showing 210EUR on shopping, 300EUR on rent</Text>
-      </View>
-      <View style={styles.addCategoryContainer}>
-        <TouchableOpacity style={styles.addCategoryButton} onPress={() => navigation.navigate('Add Category')}>
-          <Text style={styles.addCategoryButtonText}>Add Category</Text>
-        </TouchableOpacity>
+        <Text>...my goals</Text>
       </View>
     </View>
   );
@@ -29,25 +24,5 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center'
-  },
-  addCategoryContainer: {
-    width: '100%',
-    position:'absolute',
-    bottom: 0,
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  addCategoryButton: {
-    width: '85%',
-    padding: '1.5%',
-    backgroundColor: GREEN_PARIS,
-    borderRadius: 20,
-    marginBottom: '1%'
-  },
-  addCategoryButtonText: { 
-    color: WHITE,
-    textAlign: 'center',
-    fontWeight: FONT_WEIGHT_REGULAR,
-    fontSize: FONT_SIZE_HEADING
   },
 });
