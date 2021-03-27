@@ -14,6 +14,9 @@ import { getAsyncStorage, setAsyncStorage } from 'src/util/StorageHelper.js'
 import { removeAsyncStorage } from 'src/util/StorageHelper';
 import { Screens } from 'src/scenes/Screens.js';
 import { ScreensTabNavigator } from './src/main/scenes/Screens';
+import { GREEN_MINT, GREY_EXTRA_LIGHT } from './src/main/resources/styles/colours';
+import { setCustomTextInput, setCustomText } from 'react-native-global-props';
+import * as Font from 'expo-font';
 
 const Stack = createStackNavigator();
 
@@ -21,13 +24,31 @@ export default App = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [obpToken, setToken] = useState('');
   const consumerKey = process.env['CONSUMER_KEY'];
+  const [fontsLoading, setFontsLoading] = useState(true);
 
   useEffect(() => {
+    const loadFonts = async () => {
+      Font.loadAsync({ Netto: require('./assets/fonts/netto.ttf')} )
+      .then(() => {
+        const customTextProps = {
+          style: {
+            fontFamily: 'Netto'
+          }
+        };
+        setCustomText(customTextProps);
+        setCustomTextInput(customTextProps);
+        setFontsLoading(false);
+      });
+    }
+    loadFonts();
     // Fetch the token from storage then navigate to our appropriate place
     // the loading screen will be unmounted and thrown away
     const bootstrapAsync = async () => {
       getAsyncStorage('obpToken')
-      .then((token) => { console.log(`token to restore: ${token}`); dispatch({ type: 'RESTORE_TOKEN', obpToken: token }); })
+      .then((token) => { 
+        console.log(`token to restore: ${token}`); 
+        dispatch({ type: 'RESTORE_TOKEN', obpToken: token }); 
+      });
     };
     bootstrapAsync();
   }, []);
@@ -69,7 +90,7 @@ export default App = () => {
     <MyContext.Provider value={authContext}>
       <NavigationContainer>
         <Stack.Navigator headerMode="none">
-          {state.isLoading ? (
+          {state.isLoading || fontsLoading ? (
             <Stack.Screen name="Splash Screen" component={SplashScreen} />
           ) : state.obpToken == null ? ( // No token found, user is not signed in
             <Stack.Screen
