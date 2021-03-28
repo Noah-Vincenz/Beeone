@@ -310,7 +310,6 @@ const styles = StyleSheet.create({
         backgroundColor: GREY_MEDIUM
     },
     inputViewText: {
-        fontWeight: FONT_WEIGHT_REGULAR,
         fontSize: FONT_SIZE_SMALL,
         color: GREY_MEDIUM,
         alignSelf: 'flex-start',
@@ -349,7 +348,6 @@ const styles = StyleSheet.create({
     doneButtonText: {
         color: WHITE,
         textAlign: 'center',
-        fontWeight: FONT_WEIGHT_REGULAR,
         fontSize: FONT_SIZE_HEADING
     }
 });
