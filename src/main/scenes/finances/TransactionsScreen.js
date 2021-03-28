@@ -6,7 +6,7 @@ import { getAsyncStorage } from '../../util/StorageHelper';
 import { base_url, joinPath, getTransactions } from '../../util/ObpApiUtils';
 import { getLogoSourcePath, getRealBankName, getRealBankId } from '../../util/AccountUtils';
 import { GREY_LIGHT, WHITE, SECONDARY } from 'resources/styles/colours';
-import { BLACK, GREY_DARK, GREY_EXTRA_LIGHT, GREY_MEDIUM } from '../../resources/styles/colours';
+import { BLACK, GREY_DARK, GREY_EXTRA_LIGHT, GREY_MEDIUM, RED_STANDARD, GREEN_STANDARD } from '../../resources/styles/colours';
 import Moment from 'moment';
 
 export function TransactionsScreen({ route, navigation }) {
@@ -62,8 +62,17 @@ export function TransactionsScreen({ route, navigation }) {
                   item.other_account.holder.name // external transfer
                 )}
               </Text>
-              <Text style={[styles.amountDetail, styles.detailsText]}>{item.details.value.amount}{getCurrencySymbol(item.details.value.currency)}</Text>
-              <Text style={[styles.balanceDetail, styles.detailsText]}>{item.details.new_balance.amount}{getCurrencySymbol(item.details.new_balance.currency)}</Text>
+              <Text style={[
+                styles.detailsText,
+                item.details.value.amount > 0 ? styles.amountDetailGreen :  styles.amountDetailRed, 
+                ]}>
+                  {item.details.value.amount}{getCurrencySymbol(item.details.value.currency)}
+              </Text>
+              <Text style={[
+                styles.balanceDetail, 
+                item.details.new_balance.amount > 0 ? styles.amountDetailGreen :  styles.amountDetailRed, 
+                ]}>
+                  {item.details.new_balance.amount}{getCurrencySymbol(item.details.new_balance.currency)}</Text>
             </View>
           )}
         />
@@ -131,12 +140,24 @@ const styles = StyleSheet.create({
       flex: 1.3,
       textAlign: 'left',
     },
-    amountDetail: {
+    amountDetailRed: {
       flex: 1,
       textAlign: 'right',
+      color: RED_STANDARD
     },
-    balanceDetail: {
+    amountDetailGreen: {
       flex: 1,
       textAlign: 'right',
+      color: GREEN_STANDARD
+    },
+    balanceDetailRed: {
+      flex: 1,
+      textAlign: 'right',
+      color: RED_STANDARD
+    },
+    balanceDetailGreen: {
+      flex: 1,
+      textAlign: 'right',
+      color: GREEN_STANDARD
     }
 });

@@ -18,6 +18,12 @@ export const GREY_DARK = '#8a8a8a'
 export const BLUE_MEDIUM = "#465881"
 export const BLUE_DARK = "#003f5c"
 
+// red 
+export const RED_STANDARD = "#e60000"
+
+// green
+export const GREEN_STANDARD = "#00b300"
+
 // green from light to dark
 export const GREEN_MINT = '#98fb98'
 export const GREEN_PARIS = '#50c878'
