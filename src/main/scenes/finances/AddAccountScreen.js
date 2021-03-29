@@ -138,6 +138,6 @@ const styles = StyleSheet.create({
     accountContainerText: {
       color: BLACK,
       textAlign: 'center',
-      lineHeight: 28
+      lineHeight: 26
     },
 });
