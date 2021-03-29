@@ -17,10 +17,10 @@
 
 This is a prototype for a native mobile application that makes use of the [Open Bank Project](https://www.openbankproject.com) sandbox API to access open banking data. This app shows you how to easily integrate an open banking API to develop your personal banking app.
 
-![screenshot-login-mock](https://user-images.githubusercontent.com/16804823/112833784-20350200-908f-11eb-91a5-048d9ece5543.png)
-![screenshot-accounts-mock](https://user-images.githubusercontent.com/16804823/112833793-24f9b600-908f-11eb-9ac7-4246a470cc34.png)
-![screenshot-addaccount-mock](https://user-images.githubusercontent.com/16804823/112833821-2c20c400-908f-11eb-923f-9c9cdfcaeff6.png)
-![screenshot-payment-mock](https://user-images.githubusercontent.com/16804823/112833838-2e831e00-908f-11eb-8d44-75faf901cfec.png)
+![screenshot-login-mock](https://user-images.githubusercontent.com/16804823/112833784-20350200-908f-11eb-91a5-048d9ece5543.png =250x)
+![screenshot-accounts-mock](https://user-images.githubusercontent.com/16804823/112833793-24f9b600-908f-11eb-9ac7-4246a470cc34.png =250x)
+![screenshot-addaccount-mock](https://user-images.githubusercontent.com/16804823/112833821-2c20c400-908f-11eb-923f-9c9cdfcaeff6.png =250x)
+![screenshot-payment-mock](https://user-images.githubusercontent.com/16804823/112833838-2e831e00-908f-11eb-8d44-75faf901cfec.png =250x)
 
 
 ## 🚀 How to use
